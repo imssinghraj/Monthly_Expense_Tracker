@@ -355,6 +355,13 @@ html.dark .theme-toggle{background:var(--surface);border-color:rgba(143,155,170,
 <div id="toast"></div>
 
 <script>
+// ── CRYPTO: hash password with SHA-256 (works in all modern browsers + Vercel) ──
+async function hashPassword(password) {
+  const msgBuffer = new TextEncoder().encode(password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
 let currentTab = 'login';
 const _savedTheme = localStorage.getItem('exp_theme');
 let darkMode = _savedTheme === 'dark' || _savedTheme === 'light'
@@ -393,6 +400,8 @@ function switchTab(tab) {
     : 'Don\'t have an account? <a href="#" onclick="switchTab(\'register\');return false">Create one free</a>';
 
   document.getElementById('password').autocomplete = isReg ? 'new-password' : 'current-password';
+  document.getElementById('emailErr').textContent = 'Enter a valid email address';
+  document.getElementById('passwordErr').textContent = 'Password must be at least 8 characters';
   clearErrors();
 }
 
@@ -466,31 +475,76 @@ function validate() {
   return ok;
 }
 
-function handleSubmit(e) {
+async function handleSubmit(e) {
   e.preventDefault();
   if (!validate()) return;
 
   const btn = document.getElementById('submitBtn');
   btn.classList.add('loading');
 
-  setTimeout(() => {
-    btn.classList.remove('loading');
-    const isReg = currentTab === 'register';
+  const email    = document.getElementById('email').value.trim().toLowerCase();
+  const password = document.getElementById('password').value;
+  const isReg    = currentTab === 'register';
+  const users    = JSON.parse(localStorage.getItem('exp_users') || '{}');
 
-    // Save auth state
-    const email = document.getElementById('email').value.trim();
-    const name  = isReg ? (document.getElementById('firstName').value.trim() || email.split('@')[0]) : email.split('@')[0];
+  // Hash the password before storing/comparing
+  const hashed = await hashPassword(password);
+
+  // Simulate slight delay for UX
+  await new Promise(r => setTimeout(r, 700));
+  btn.classList.remove('loading');
+
+  if (isReg) {
+    // ── REGISTER ──
+    if (users[email]) {
+      showError('email', 'emailErr');
+      document.getElementById('emailErr').textContent = 'An account with this email already exists';
+      document.getElementById('emailErr').classList.add('show');
+      return;
+    }
+    const name = document.getElementById('firstName').value.trim();
+    users[email] = { name, hash: hashed };
+    localStorage.setItem('exp_users', JSON.stringify(users));
     localStorage.setItem('exp_user', JSON.stringify({ email, name, loggedIn: true }));
+    showSuccess(true, name);
 
-    // Show success
-    document.getElementById('formBody').style.display = 'none';
-    const s = document.getElementById('successState');
-    s.classList.add('show');
-    document.getElementById('successTitle').textContent = isReg ? `Welcome, ${name}!` : `Welcome back, ${name}!`;
-    document.getElementById('successMsg').textContent   = isReg ? 'Your account is ready. Taking you to the dashboard…' : 'Signed in successfully. Taking you to the dashboard…';
+  } else {
+    // ── LOGIN ──
+    const user = users[email];
+    if (!user) {
+      showError('email', 'emailErr');
+      document.getElementById('emailErr').textContent = 'No account found with this email';
+      document.getElementById('emailErr').classList.add('show');
+      return;
+    }
+    // Support both old plain-text (migration) and new hashed passwords
+    const passwordMatch = user.hash ? user.hash === hashed : user.password === password;
+    if (!passwordMatch) {
+      showError('password', 'passwordErr');
+      document.getElementById('passwordErr').textContent = 'Incorrect password';
+      document.getElementById('passwordErr').classList.add('show');
+      return;
+    }
+    // Migrate plain-text to hashed on successful login
+    if (!user.hash) {
+      user.hash = hashed;
+      delete user.password;
+      localStorage.setItem('exp_users', JSON.stringify(users));
+    }
+    localStorage.setItem('exp_user', JSON.stringify({ email, name: user.name, loggedIn: true }));
+    showSuccess(false, user.name);
+  }
+}
 
-    setTimeout(() => { window.location.href = 'index.html'; }, 1400);
-  }, 900);
+function showSuccess(isReg, name) {
+  document.getElementById('formBody').style.display = 'none';
+  const s = document.getElementById('successState');
+  s.classList.add('show');
+  document.getElementById('successTitle').textContent = isReg ? `Welcome, ${name}!` : `Welcome back, ${name}!`;
+  document.getElementById('successMsg').textContent   = isReg
+    ? 'Your account is ready. Taking you to the dashboard…'
+    : 'Signed in successfully. Taking you to the dashboard…';
+  setTimeout(() => { window.location.href = 'index.html'; }, 1400);
 }
 
 function socialAuth(provider) {
