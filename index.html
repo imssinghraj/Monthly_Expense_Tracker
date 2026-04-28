@@ -30,12 +30,15 @@ html.dark{
 }
 html{font-size:15px}
 body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;padding-bottom:60px;transition:background .2s,color .2s}
-.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;transition:background .2s,border-color .2s}
-.nav-center{display:flex;flex-direction:column;align-items:center}
-.nav-title{font-size:16px;font-weight:600;letter-spacing:-.01em}
-.nav-sub{font-size:11px;color:var(--muted);margin-top:1px}
-.nav-side{display:flex;align-items:center;gap:6px}
-.nav-arrows{display:flex;gap:6px}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;transition:background .2s,border-color .2s;min-height:64px}
+.nav-center{position:absolute;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none}
+.nav-center .today-btn{pointer-events:auto}
+.nav-title{font-size:16px;font-weight:600;letter-spacing:-.01em;text-align:center;white-space:nowrap}
+.nav-sub{font-size:11px;color:var(--muted);margin-top:1px;text-align:center;white-space:nowrap}
+.nav-side{display:flex;align-items:center;gap:8px;min-width:0;z-index:1}
+.nav-side.left{justify-content:flex-start}
+.nav-side.right{justify-content:flex-end}
+.nav-arrows{display:flex;gap:4px}
 .nav-btn{background:none;border:1px solid var(--border);border-radius:var(--radius-sm);width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text);font-size:14px;transition:background .15s}
 .nav-btn:hover{background:var(--bg)}
 .today-btn{background:none;border:1px solid var(--border);border-radius:var(--radius-sm);padding:5px 12px;font-size:12px;cursor:pointer;color:var(--muted);font-family:inherit;transition:all .15s}
@@ -56,6 +59,15 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 .section-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:8px}
 .budget-banner{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:14px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .budget-banner.unset{border-color:var(--orange-bd);background:var(--orange-bg)}
+.budget-nudge-card{display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:16px;background:linear-gradient(135deg,rgba(29,78,216,.07),rgba(16,185,129,.06));border:1px solid rgba(113,167,255,.2);box-shadow:0 4px 24px rgba(29,78,216,.08);transition:transform .2s ease,box-shadow .2s ease;cursor:default}
+.budget-nudge-card:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(29,78,216,.14)}
+.bnc-icon{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,rgba(113,167,255,.18),rgba(16,185,129,.14));display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 2px 10px rgba(113,167,255,.15)}
+.bnc-body{flex:1;min-width:0}
+.bnc-title{font-size:17px;font-weight:700;color:var(--text);letter-spacing:-.01em;min-height:24px;transition:opacity .4s ease}
+.bnc-title.fade{opacity:0}
+.bnc-sub{font-size:12px;color:var(--muted);margin-top:3px}
+.bnc-btn{flex-shrink:0;background:linear-gradient(135deg,#3B82F6,#6366F1);color:#fff;border:none;border-radius:10px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity .15s,transform .15s,box-shadow .15s;box-shadow:0 4px 14px rgba(99,102,241,.35)}
+.bnc-btn:hover{opacity:.92;transform:translateY(-1px);box-shadow:0 6px 18px rgba(99,102,241,.45)}
 .bb-left .bb-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:3px}
 .bb-left .bb-val{font-size:22px;font-weight:600;letter-spacing:-.01em}
 .bb-left .bb-sub{font-size:12px;color:var(--muted);margin-top:2px}
@@ -78,7 +90,8 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 .mom-up{background:var(--red-bg);color:var(--red)}
 .mom-dn{background:var(--green-bg);color:var(--green)}
 .mom-flat{background:var(--bg);color:var(--muted);border:1px solid var(--border)}
-.form-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);margin-bottom:14px}
+.form-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);margin-bottom:14px;display:flex;flex-direction:column}
+.form-card.stretch{flex:1}
 .date-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border)}
 .date-disp{font-size:15px;font-weight:600}
 .date-row input[type="date"]{border:1px solid var(--border);background:var(--bg);border-radius:var(--radius-sm);padding:5px 9px;font-family:inherit;font-size:13px;color:var(--text);outline:none;cursor:pointer}
@@ -87,8 +100,10 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 .entry-block:last-of-type{border-bottom:none;padding-bottom:0;margin-bottom:0}
 .entry-row{display:grid;grid-template-columns:1fr 130px 32px;gap:8px;align-items:end}
 .field label{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
-.field select,.field input[type="number"]{width:100%;border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 10px;font-family:inherit;font-size:14px;color:var(--text);background:var(--bg);outline:none;transition:border-color .15s}
-.field select:focus,.field input[type="number"]:focus{border-color:var(--text);background:var(--surface)}
+.field select,.field input[type="number"]{width:100%;border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-family:inherit;font-size:14px;color:var(--text);background-color:var(--surface);outline:none;transition:all .2s ease;appearance:none;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.field select{background-image:url("data:image/svg+xml,%3Csvg width='14' height='9' viewBox='0 0 14 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L7 7.5L13 1.5' stroke='%238A8680' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:40px;cursor:pointer}
+.field select:hover{border-color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.field select:focus,.field input[type="number"]:focus{border-color:var(--text);background-color:var(--surface);box-shadow:0 0 0 3px var(--ring),0 2px 8px rgba(0,0,0,.08)}
 .field input::placeholder{color:var(--muted)}
 .remove-row-btn{background:none;border:1px solid var(--border);border-radius:var(--radius-sm);width:32px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:13px;transition:all .15s;margin-top:19px;flex-shrink:0}
 .remove-row-btn:hover{color:var(--red);background:var(--red-bg);border-color:var(--red-bd)}
@@ -130,7 +145,9 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 .pill-ok{background:var(--blue-bg);color:var(--blue)}
 .pill-high{background:var(--orange-bg);color:var(--orange)}
 .pill-over{background:var(--red-bg);color:var(--red)}
-.cat-chart{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.cat-chart{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:14px;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.cat-chart.stretch{flex:1}
+.compact-stats{flex:0 0 auto}
 .cat-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
 .cat-name{font-size:12px;color:var(--muted);width:85px;flex-shrink:0}
 .cat-bar-bg{flex:1;height:8px;background:var(--border);border-radius:99px;overflow:hidden}
@@ -165,8 +182,10 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 .swipe-del-bg{position:absolute;right:0;top:0;bottom:0;background:var(--red);display:flex;align-items:center;padding:0 16px;color:#fff;font-size:12px;font-weight:600;pointer-events:none;opacity:0;transition:opacity .15s}
 .entry-edit-form{padding:10px 0;border-bottom:1px solid var(--border)}
 .entry-edit-form .edit-grid{display:grid;grid-template-columns:1fr 120px;gap:8px;margin-bottom:8px}
-.entry-edit-form select,.entry-edit-form input[type="number"]{border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 10px;font-family:inherit;font-size:13px;color:var(--text);background:var(--bg);outline:none;width:100%}
-.entry-edit-form select:focus,.entry-edit-form input[type="number"]:focus,.entry-edit-form input[type="text"]:focus{border-color:var(--text)}
+.entry-edit-form select,.entry-edit-form input[type="number"]{border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;font-family:inherit;font-size:13px;color:var(--text);background:var(--surface);outline:none;width:100%;transition:all .2s ease;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.entry-edit-form select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='14' height='9' viewBox='0 0 14 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L7 7.5L13 1.5' stroke='%238A8680' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:40px;cursor:pointer}
+.entry-edit-form select:hover{border-color:var(--text);box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.entry-edit-form select:focus,.entry-edit-form input[type="number"]:focus,.entry-edit-form input[type="text"]:focus{border-color:var(--text);box-shadow:0 0 0 3px var(--ring),0 2px 6px rgba(0,0,0,.08)}
 .entry-edit-form input[type="text"]{border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 10px;font-family:inherit;font-size:13px;color:var(--text);background:var(--bg);outline:none;width:100%;margin-bottom:8px}
 .entry-edit-form .edit-actions{display:flex;gap:6px}
 .week-bars{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:16px}
@@ -194,10 +213,10 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 .ins-val{font-size:20px;font-weight:600;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
 .ins-lbl{font-size:11px;color:var(--muted);margin-top:3px}
 .section-block{margin-bottom:18px}
-.dashboard-grid{display:grid;grid-template-columns:1fr;gap:20px}
-.dashboard-primary,.dashboard-secondary{display:flex;flex-direction:column;gap:20px;min-width:0}
+.dashboard-grid{display:grid;grid-template-columns:1fr;gap:20px;align-items:start}
+.dashboard-primary,.dashboard-secondary{display:flex;flex-direction:column;gap:20px;min-width:0;align-self:start}
 .dashboard-primary>*,.dashboard-secondary>*{width:100%}
-.dashboard-secondary .cat-chart,.dashboard-secondary .recurring-section{margin-bottom:0}
+.dashboard-secondary .cat-chart,.dashboard-secondary .recurring-section{margin-bottom:0;flex:1}
 .cmp-chart-wrap{margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
 .cmp-chart-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:10px}
 .cmp-chart-legend{display:flex;gap:14px;margin-bottom:10px}
@@ -205,7 +224,7 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 .cmp-legend-line{width:18px;height:2px;border-radius:2px;flex-shrink:0}
 .cmp-svg{width:100%;display:block;overflow:visible}
 .cmp-axis-label{font-size:9px;fill:var(--muted);font-family:'Segoe UI',system-ui,sans-serif}
-.sticky-desktop{position:relative}
+.sticky-desktop{position:relative;display:flex;flex-direction:column;flex:1}
 .compact-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .compact-stats .stat{min-width:0}
 .compact-stats .stat-lbl{line-height:1.35}
@@ -214,9 +233,11 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,san
 /* ── HEATMAP — GitHub Style ─────────────────────── */
 .heatmap-wrap{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 16px 38px;margin-bottom:14px;box-shadow:var(--shadow);overflow:hidden}
 .heatmap-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.heatmap-year-select{border:1px solid var(--border);border-radius:8px;padding:4px 28px 4px 10px;font-size:11px;font-weight:600;color:var(--text);background:var(--surface);font-family:inherit;cursor:pointer;outline:none;transition:border-color .12s,background .12s}
-.heatmap-year-select:hover{border-color:var(--text)}
-.heatmap-year-select:focus{border-color:var(--text)}
+.heatmap-year-select{border:1px solid var(--border);border-radius:9px;padding:7px 36px 7px 14px;font-size:12px;font-weight:600;color:var(--text);background-color:var(--surface);background-image:url("data:image/svg+xml,%3Csvg width='14' height='9' viewBox='0 0 14 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L7 7.5L13 1.5' stroke='%238A8680' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;font-family:inherit;cursor:pointer;outline:none;transition:all .2s ease;appearance:none;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.heatmap-year-select:hover{border-color:var(--text);background-color:var(--bg);box-shadow:0 2px 8px rgba(0,0,0,.1);transform:translateY(-1px)}
+.heatmap-year-select:focus{border-color:var(--text);box-shadow:0 0 0 3px var(--ring),0 2px 8px rgba(0,0,0,.1)}
+.heatmap-year-select:active{transform:translateY(0)}
+.week-picker{min-width:190px;font-size:12px;padding:7px 36px 7px 14px}
 .hm-scroll-inner{display:flex;justify-content:center;width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;padding-bottom:6px}
 .hm-month-strip{display:flex;gap:6px;align-items:flex-start;width:max-content;padding-right:8px}
 .hm-month-block{display:flex;flex-direction:column;gap:6px;align-items:center}
@@ -287,8 +308,10 @@ html.dark .tab.active{background:#E7EDF6;color:#121821;border-color:#E7EDF6;box-
 html.dark .btn-primary{background:#E7EDF6;color:#121821;border-color:#E7EDF6}
 html.dark .btn-primary:hover,html.dark .btn-orange:hover,html.dark .btn-green:hover{opacity:.94}
 html.dark .btn-ghost{background:transparent;color:var(--muted);border-color:rgba(143,155,170,.16)}
-html.dark .field select,html.dark .field input[type="number"],html.dark .notes-row input[type="text"],html.dark .date-row input[type="date"],html.dark .entry-edit-form select,html.dark .entry-edit-form input[type="number"],html.dark .entry-edit-form input[type="text"],html.dark .modal input[type="number"],html.dark .modal input[type="text"],html.dark .add-cat-row input{background:var(--surface-2);border-color:rgba(143,155,170,.16)}
-html.dark .field select:focus,html.dark .field input[type="number"]:focus,html.dark .notes-row input:focus,html.dark .date-row input[type="date"]:focus,html.dark .entry-edit-form select:focus,html.dark .entry-edit-form input:focus,html.dark .modal input:focus,html.dark .add-cat-row input:focus{background:var(--surface-3);border-color:rgba(113,167,255,.38)}
+html.dark .field input[type="number"],html.dark .notes-row input[type="text"],html.dark .date-row input[type="date"],html.dark .entry-edit-form input[type="number"],html.dark .entry-edit-form input[type="text"],html.dark .modal input[type="number"],html.dark .modal input[type="text"],html.dark .add-cat-row input{background:#1D2430;border-color:rgba(143,155,170,.16);box-shadow:0 2px 4px rgba(0,0,0,.2)}
+html.dark .field select,html.dark .entry-edit-form select,html.dark .heatmap-year-select{background-color:#1D2430 !important;background-image:url("data:image/svg+xml,%3Csvg width='14' height='9' viewBox='0 0 14 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L7 7.5L13 1.5' stroke='%238F9BAA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;border-color:rgba(143,155,170,.16);box-shadow:0 2px 4px rgba(0,0,0,.2)}
+html.dark .field select:hover,html.dark .entry-edit-form select:hover,html.dark .heatmap-year-select:hover{border-color:rgba(113,167,255,.4);box-shadow:0 4px 12px rgba(0,0,0,.3);background-color:#242D3A !important}
+html.dark .field select:focus,html.dark .field input[type="number"]:focus,html.dark .notes-row input:focus,html.dark .date-row input[type="date"]:focus,html.dark .entry-edit-form select:focus,html.dark .entry-edit-form input:focus,html.dark .modal input:focus,html.dark .add-cat-row input:focus{background-color:#242D3A !important;border-color:rgba(113,167,255,.5);box-shadow:0 0 0 3px rgba(113,167,255,.15),0 4px 12px rgba(0,0,0,.3)}
 html.dark .menu-sep,html.dark .entry-item,html.dark .entry-block,html.dark .date-row,html.dark .day-card.expanded .day-header,html.dark .hm-total-row{border-color:rgba(143,155,170,.12)}
 html.dark .section-title,html.dark .nav-sub,html.dark .stat-sub,html.dark .prog-meta,html.dark .cat-name,html.dark .week-bar-label,html.dark .week-bar-date,html.dark .mc-budget,html.dark .mc-sub,html.dark .ins-lbl,html.dark .hm-legend span,html.dark .hm-day-sub,html.dark .modal p,html.dark .modal-hint{color:var(--muted)}
 html.dark .empty{background:var(--surface);border-color:rgba(143,155,170,.16)}
@@ -317,10 +340,8 @@ html.dark .hm-no-data{background:var(--surface-3);opacity:.9}
 }
 @media(min-width:900px){
   .stats{grid-template-columns:repeat(4,1fr)}
-  .dashboard-grid{grid-template-columns:2.2fr 1fr}
-  .dashboard-primary{align-self:start}
-  .dashboard-secondary{align-self:start}
-  .sticky-desktop{position:sticky;top:90px}
+  .dashboard-grid{grid-template-columns:2.2fr 1fr;align-items:start}
+  .sticky-desktop{position:sticky;top:90px;align-self:start}
   .compact-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 </style>
@@ -364,7 +385,13 @@ let darkMode = false;
 /* ── DARK MODE ───────────────────────────────────── */
 function initTheme(){
   const saved = localStorage.getItem('exp_theme');
-  darkMode = saved === 'dark';
+  if(saved === 'dark' || saved === 'light'){
+    darkMode = saved === 'dark';
+  } else {
+    // Auto: dark from 6pm to 6am, light otherwise
+    const h = new Date().getHours();
+    darkMode = h >= 18 || h < 6;
+  }
   applyTheme();
 }
 function toggleTheme(){
@@ -415,7 +442,7 @@ function saveData(){
 function uid(){ return Math.random().toString(36).slice(2,9); }
 
 /* ── UTILS ───────────────────────────────────────── */
-function today(){ return new Date().toISOString().slice(0,10); }
+function today(){ const d=new Date(); const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,'0'); const dd=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${dd}`; }
 function nowYear(){ return new Date().getFullYear(); }
 function nowMonth(){ return new Date().getMonth(); }
 function nowDay(){ return new Date().getDate(); }
@@ -426,23 +453,30 @@ function fmtDate(iso){ const [y,m,d]=iso.split('-'); return `${parseInt(d)} ${MO
 function fmt(n){ return '₹'+Math.round(Math.abs(n)).toLocaleString('en-IN'); }
 function fmtPct(n){ return `${n>0?'+':''}${n.toFixed(1)}%`; }
 function dayTotal(iso){ return (entries[iso]||[]).reduce((s,e)=>s+e.amount,0); }
+function isRentCat(cat){ return (customCats[cat]&&customCats[cat].label||'').toLowerCase()==='rent'; }
+function dayTotalExcluding(iso,excludeCats){ return (entries[iso]||[]).filter(e=>!excludeCats.includes(e.cat)).reduce((s,e)=>s+e.amount,0); }
+function dayTotalExcludingRent(iso){ return (entries[iso]||[]).filter(e=>!isRentCat(e.cat)).reduce((s,e)=>s+e.amount,0); }
 function monthDates(y,m){ const p=monthKey(y,m); return Object.keys(entries).filter(k=>k.startsWith(p)&&(entries[k]||[]).length>0).sort((a,b)=>b.localeCompare(a)); }
 function monthSpent(y,m){ return monthDates(y,m).reduce((s,k)=>s+dayTotal(k),0); }
 function parseMonthKey(key){ const [y,m] = key.split('-').map(Number); return { y, m: m - 1 }; }
 function monthLabelFromKey(key){ const {y,m} = parseMonthKey(key); return `${MONTHS_S[m]} ${y}`; }
 function getMonthBudget(y,m){ return budgets[monthKey(y,m)]||null; }
 function dailyLimit(y,m){ const b=getMonthBudget(y,m); return b?b/daysInMonth(y,m):null; }
-function daysLeft(y,m){ return (y===nowYear()&&m===nowMonth())?daysInMonth(y,m)-nowDay()+1:0; }
+function daysLeft(y,m){ return (y===nowYear()&&m===nowMonth())?Math.max(0,daysInMonth(y,m)-nowDay()+1):0; }
 function monthCatTotals(y,m){
   const t={};
   Object.keys(customCats).forEach(k=>{ t[k]=0; });
   monthDates(y,m).forEach(iso=>(entries[iso]||[]).forEach(e=>{ t[e.cat]=(t[e.cat]||0)+e.amount; }));
   return t;
 }
-function dayNetSavings(y,m){
-  const dl=dailyLimit(y,m);
-  if(!dl) return null;
-  return monthDates(y,m).reduce((sum,k)=>sum+(dl-dayTotal(k)),0);
+function netSavedOverspent(y,m){
+  const budget=getMonthBudget(y,m);
+  if(!budget) return {value:null, pending:false};
+  const isCurrentMonth=(y===nowYear()&&m===nowMonth());
+  if(isCurrentMonth) return {value:null, pending:true};
+  // Completed month: budget - total expenditure (excluding rent)
+  const spent=monthDates(y,m).reduce((s,k)=>s+dayTotalExcludingRent(k),0);
+  return {value:budget-spent, pending:false};
 }
 function dateToISO(dt){ return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`; }
 function getHeatmapYears(){
@@ -474,25 +508,62 @@ function momChange(y,m){
   const curr=monthSpent(y,m);
   let pm=m-1,py=y; if(pm<0){pm=11;py--;}
   const prev=monthSpent(py,pm);
-  if(!prev||!curr) return null;
+  if(!prev) return null; // can't divide by zero
   return ((curr-prev)/prev*100);
 }
 function getWeekStart(iso){
-  const d=new Date(iso+'T00:00:00');
-  const day=d.getDay();
-  const diff=day===0?-6:1-day;
-  d.setDate(d.getDate()+diff);
-  return d.toISOString().slice(0,10);
+  // Parse date parts directly to avoid timezone issues
+  const [y,m,d]=iso.split('-').map(Number);
+  const date=new Date(y,m-1,d);
+  const day=date.getDay(); // 0=Sun,1=Mon,...,6=Sat
+  date.setDate(d-day);     // go back to Sunday
+  const yy=date.getFullYear();
+  const mm=String(date.getMonth()+1).padStart(2,'0');
+  const dd=String(date.getDate()).padStart(2,'0');
+  return `${yy}-${mm}-${dd}`;
 }
 function getWeekDates(weekStart){
+  const [y,m,d]=weekStart.split('-').map(Number);
   const dates=[];
-  const d=new Date(weekStart+'T00:00:00');
   for(let i=0;i<7;i++){
-    dates.push(new Date(d).toISOString().slice(0,10));
-    d.setDate(d.getDate()+1);
+    const date=new Date(y,m-1,d+i);
+    const yy=date.getFullYear();
+    const mm=String(date.getMonth()+1).padStart(2,'0');
+    const dd=String(date.getDate()).padStart(2,'0');
+    dates.push(`${yy}-${mm}-${dd}`);
   }
   return dates;
 }
+
+function getWeekOptions(){
+  const weeks = [];
+  const currentWeek = getWeekStart(today());
+  const [cy,cm,cd] = currentWeek.split('-').map(Number);
+
+  // Generate 12 weeks: current + 11 past (newest first)
+  for(let i = 0; i >= -11; i--){
+    const base = new Date(cy, cm-1, cd + (i * 7));
+    const yy = base.getFullYear();
+    const mm = String(base.getMonth()+1).padStart(2,'0');
+    const dd = String(base.getDate()).padStart(2,'0');
+    const weekStart = `${yy}-${mm}-${dd}`;
+
+    const weekDates = getWeekDates(weekStart);
+    const [sy,sm,sd] = weekDates[0].split('-').map(Number);
+    const [ey,em,ed] = weekDates[6].split('-').map(Number);
+
+    const startStr = `${sd} ${MONTHS_S[sm-1]}`;
+    const endStr   = `${ed} ${MONTHS_S[em-1]} ${ey}`;
+    const label = (sm === em)
+      ? `${sd}-${ed} ${MONTHS_S[sm-1]} ${sy}`
+      : `${startStr} – ${endStr}`;
+
+    weeks.push({ value: weekStart, label, isCurrent: weekStart === currentWeek });
+  }
+  
+  return weeks;
+}
+
 function hexToRgba(hex,alpha){
   try{
     const r=parseInt(hex.slice(1,3),16);
@@ -586,37 +657,56 @@ function buildNav(){
     const startStr=`${parseInt(sd)} ${MONTHS_S[parseInt(sm)-1]}`;
     const endStr=`${parseInt(ed)} ${MONTHS_S[parseInt(em)-1]} ${ey}`;
     const isCurrentWeek=viewWeekStart===getWeekStart(today());
+    const weekOptions = getWeekOptions();
+    
     return `<div class="nav">
-      <div class="nav-side"><div class="nav-arrows"><button class="nav-btn" id="prevWeekBtn">‹</button></div></div>
+      <div class="nav-side left">
+        <div class="nav-arrows">
+          <button class="nav-btn" id="prevWeekBtn">‹</button>
+        </div>
+      </div>
       <div class="nav-center">
         <div class="nav-title">${startStr} – ${endStr}</div>
         ${isCurrentWeek?'<div class="nav-sub">Current week</div>':'<button class="today-btn" id="todayBtn">This week</button>'}
       </div>
-      <div class="nav-side"><div class="nav-arrows"><button class="nav-btn" id="prevWeekBtn">‹</button></div>${themeBtn}${userBtn}${menuBtn}</div>
+      <div class="nav-side right">
+        <select id="weekPicker" class="heatmap-year-select week-picker" aria-label="Select week">
+          ${weekOptions.map(w => `<option value="${w.value}"${w.value===viewWeekStart?' selected':''}>${w.label}</option>`).join('')}
+        </select>
+        <div class="nav-arrows">
+          <button class="nav-btn" id="nextWeekBtn">›</button>
+        </div>
+        ${themeBtn}${userBtn}${menuBtn}
+      </div>
     </div>`;
   }
   const ic=(viewYear===nowYear()&&viewMonth===nowMonth());
   return `<div class="nav">
-    <div class="nav-side"><div class="nav-arrows">
-      <button class="nav-btn" id="prevYearBtn">«</button>
-      <button class="nav-btn" id="prevMonthBtn">‹</button>
-    </div></div>
+    <div class="nav-side left">
+      <div class="nav-arrows">
+        <button class="nav-btn" id="prevYearBtn">«</button>
+        <button class="nav-btn" id="prevMonthBtn">‹</button>
+      </div>
+    </div>
     <div class="nav-center">
       <div class="nav-title">${MONTHS[viewMonth]} ${viewYear}</div>
       ${ic?'<div class="nav-sub">Current month</div>':'<button class="today-btn" id="todayBtn">Today</button>'}
     </div>
-    <div class="nav-side"><div class="nav-arrows">
-      <button class="nav-btn" id="nextMonthBtn">›</button>
-      <button class="nav-btn" id="nextYearBtn">»</button>
-    </div>${themeBtn}${userBtn}${menuBtn}</div>
+    <div class="nav-side right">
+      <div class="nav-arrows">
+        <button class="nav-btn" id="nextMonthBtn">›</button>
+        <button class="nav-btn" id="nextYearBtn">»</button>
+      </div>
+      ${themeBtn}${userBtn}${menuBtn}
+    </div>
   </div>`;
 }
 
 function buildTabs(){
   return `<div class="tabs">
-    <button class="tab ${activeTab==='month'?'active':''}" id="tabMonth">Month</button>
-    <button class="tab ${activeTab==='week'?'active':''}" id="tabWeek">Week</button>
-    <button class="tab ${activeTab==='year'?'active':''}" id="tabYear">Year</button>
+    <button class="tab ${activeTab==='month'?'active':''}" id="tabMonth">Home</button>
+    <button class="tab ${activeTab==='week'?'active':''}" id="tabWeek">Week Overview</button>
+    <button class="tab ${activeTab==='year'?'active':''}" id="tabYear">Year Summary</button>
     <button class="tab ${activeTab==='insights'?'active':''}" id="tabInsights">Insights</button>
   </div>`;
 }
@@ -645,9 +735,18 @@ function buildMonthView(){
   const left=daysLeft(viewYear,viewMonth);
   const udb=(budget&&left>0)?mr/left:null;
   const tdISO=today();
-  const td=(ic&&(entries[tdISO]||[]).length)?dayTotal(tdISO):null;
-  const tr=dl!==null?dl-(td||0):null;
-  const dns=dayNetSavings(viewYear,viewMonth);
+  // "Today's limit" = UDB at start of today = (budget - all spend before today) / days left including today
+  // This is fixed for the whole day and only recalculates at midnight
+  const spentBeforeToday=budget?Object.keys(entries)
+    .filter(k=>k.startsWith(monthKey(viewYear,viewMonth))&&k<tdISO)
+    .reduce((s,k)=>s+dayTotal(k),0):0;
+  const todayLimit=(budget&&left>0)?(budget-spentBeforeToday)/left:dl;
+  const tdRaw=(ic&&(entries[tdISO]||[]).length)?dayTotal(tdISO):null;
+  const tdNoRent=(ic&&(entries[tdISO]||[]).length)?dayTotalExcludingRent(tdISO):null;
+  const td=tdRaw;
+  // Remaining today = todayLimit - today's non-rent spend (real-time)
+  const tr=todayLimit!==null?(todayLimit-(tdNoRent||0)):null;
+  const {value:dns, pending:dnsPending}=netSavedOverspent(viewYear,viewMonth);
   const mom=momChange(viewYear,viewMonth);
   const categoryHtml=buildCategoryBreakdown(viewYear,viewMonth);
   const recurringHtml=buildRecurringSection();
@@ -669,20 +768,20 @@ function buildMonthView(){
 
   if(ic&&budget){
     s+=`
-    <div class="stat ${td!==null?(td>dl*1.25?'red':td>dl?'orange':td>0&&td<dl?'green':''):''}">
+    <div class="stat ${td!==null?(td>(todayLimit||dl)*1.25?'red':td>(todayLimit||dl)?'orange':td>0&&td<(todayLimit||dl)?'green':''):''}">
       <div class="stat-lbl">Today's spend</div><div class="stat-val">${td!==null?fmt(td):'—'}</div>
-      <div class="stat-sub">${td!==null?`<span class="pill ${statusFor(td,dl).cls}">${statusFor(td,dl).label}</span>`:'No entry yet'}</div>
+      <div class="stat-sub">${td!==null?`<span class="pill ${statusFor(td,todayLimit||dl).cls}">${statusFor(td,todayLimit||dl).label}</span>`:'No entry yet'}</div>
     </div>
-    <div class="stat ${tr<0?'red':tr<dl*.3?'orange':'green'}">
-      <div class="stat-lbl">Remaining today</div><div class="stat-val">${fmt(Math.max(0,tr))}</div><div class="stat-sub">${fmt(dl)}/day limit</div>
+    <div class="stat ${tr!==null&&tr<0?'red':tr!==null&&tr<(todayLimit||dl)*.3?'orange':'green'}">
+      <div class="stat-lbl">Remaining today</div><div class="stat-val">${fmt(Math.max(0,td!==null?tr:(todayLimit||dl)))}</div><div class="stat-sub">${fmt(todayLimit||dl)}/day limit</div>
     </div>
-    <div class="stat ${udb<0?'red':udb<dl*.6?'orange':'blue'}">
-      <div class="stat-lbl">Updated daily budget</div><div class="stat-val">${fmt(Math.max(0,udb))}</div><div class="stat-sub">for ${left} day${left!==1?'s':''} left</div>
+    <div class="stat ${udb===null||udb<0?'red':udb<dl*.6?'orange':'blue'}">
+      <div class="stat-lbl">Updated daily budget</div><div class="stat-val">${udb===null?fmt(0):fmt(Math.max(0,udb))}</div><div class="stat-sub">${left>1?`for ${left} days remaining`:left===1?'Last day of month':'Month ended'}</div>
     </div>
-    <div class="stat ${dns===null?'':dns>=0?'green':'red'}">
+    <div class="stat ${dnsPending?'':dns===null?'':dns>=0?'green':'red'}">
       <div class="stat-lbl">Net saved / overspent</div>
-      <div class="stat-val">${dns===null?'—':(dns>=0?'+':'-')+fmt(Math.abs(dns))}</div>
-      <div class="stat-sub">${dns===null?'Set a budget to track':dns>=0?'net saved across logged days':'net overspent across logged days'}</div>
+      <div class="stat-val">${dnsPending?'—':dns===null?'—':(dns>=0?'+':'-')+fmt(Math.abs(dns))}</div>
+      <div class="stat-sub">${dnsPending?'Available after month ends':dns===null?'Set a budget to track':dns>=0?'saved this month':'overspent this month'}</div>
     </div>`;
   } else if(!ic&&budget){
     const dr=monthDates(viewYear,viewMonth).length;
@@ -691,7 +790,7 @@ function buildMonthView(){
     <div class="stat ${dns===null?'':dns>=0?'green':'red'}">
       <div class="stat-lbl">Net saved / overspent</div>
       <div class="stat-val">${dns===null?'—':(dns>=0?'+':'-')+fmt(Math.abs(dns))}</div>
-      <div class="stat-sub">${dns===null?'No budget set':dns>=0?'net saved across logged days':'net overspent across logged days'}</div>
+      <div class="stat-sub">${dns===null?'No budget set':dns>=0?'saved this month':'overspent this month'}</div>
     </div>
     <div class="stat blue"><div class="stat-lbl">Avg per day</div><div class="stat-val">${fmt(avg)}</div><div class="stat-sub">${dr} days recorded</div></div>`;
   } else if(ic&&!budget){
@@ -699,7 +798,15 @@ function buildMonthView(){
     const avg=dr>0?mt/dr:0;
     s+=`
     <div class="stat blue"><div class="stat-lbl">Avg per day</div><div class="stat-val">${fmt(avg)}</div><div class="stat-sub">${dr} days recorded</div></div>
-    <div class="stat"><div class="stat-lbl">Days logged</div><div class="stat-val">${dr}</div><div class="stat-sub">Set a budget to see more</div></div>`;
+    <div class="stat"><div class="stat-lbl">Days logged</div><div class="stat-val">${dr}</div><div class="stat-sub">Set a budget to see more</div></div>
+    <div class="budget-nudge-card" style="grid-column:span 2" id="budgetNudgeCard">
+      <div class="bnc-icon">💡</div>
+      <div class="bnc-body">
+        <div id="budgetNudgeText" class="bnc-title"></div>
+        <div class="bnc-sub">Set a budget to unlock full insights</div>
+      </div>
+      <button class="bnc-btn" id="budgetNudgeBtn">Set Budget</button>
+    </div>`;
   }
   s+='</div>';
   return `
@@ -710,12 +817,14 @@ function buildMonthView(){
         <div class="sticky-desktop">
           ${formHtml}
           ${categoryHtml}
+          <div style="flex:1"></div>
         </div>
       </div>
       <div class="dashboard-secondary">
         <div class="sticky-desktop">
           ${comparisonHtml}
           ${recurringHtml}
+          <div style="flex:1"></div>
         </div>
       </div>
     </div>
@@ -792,6 +901,11 @@ function buildMonthComparison(y,m){
   const curColor = 'var(--blue)';
   const cmpColor = 'var(--muted)';
 
+  // Check if chart should be shown (budget set AND expenses exist)
+  const budget = budgets[monthKey(y, m)] || 0;
+  const hasExpenses = currentSpent > 0 || previousSpent > 0;
+  const showChart = budget > 0 && hasExpenses;
+
   const svgChart = `
     <svg class="cmp-svg" viewBox="0 0 ${W} ${H}" height="${H}">
       ${ticks}
@@ -802,10 +916,21 @@ function buildMonthComparison(y,m){
       ${makePath(curData, 'var(--blue)', false)}
     </svg>`;
 
-  return `<div class="section-title">Multi-month comparison</div>
-  <div class="cat-chart">
+  const chartSection = showChart ? `
+    <div class="cmp-chart-wrap">
+      <div class="cmp-chart-title">Cumulative spend by day</div>
+      <div class="cmp-chart-legend">
+        <span class="cmp-legend-item"><span class="cmp-legend-line" style="background:var(--blue)"></span>${monthLabelFromKey(currentKey)}</span>
+        <span class="cmp-legend-item"><span class="cmp-legend-line" style="background:transparent;border-bottom:2px dashed #aaa"></span>${monthLabelFromKey(compareKey)}</span>
+      </div>
+      ${svgChart}
+    </div>` : `<div style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;text-align:center;padding:40px 20px">
+      ${budget <= 0 ? 'Set a monthly budget to see spending trends' : 'Add some expenses to see the comparison chart'}
+    </div>`;
+
+  return `<div class="cat-chart${!showChart ? ' stretch' : ''}">
     <div class="history-header" style="margin-bottom:12px">
-      <div></div>
+      <div class="section-title" style="margin-bottom:0">Multi-month comparison</div>
       <select id="compareMonthSelect" class="heatmap-year-select" aria-label="Select comparison month">
         ${getComparisonMonths(y,m).map(key => `<option value="${key}"${key===compareKey?' selected':''}>${monthLabelFromKey(key)}</option>`).join('')}
       </select>
@@ -832,14 +957,7 @@ function buildMonthComparison(y,m){
         <div class="stat-sub">${pct===null?'Need spending in comparison month':diff>0?'Increase':diff<0?'Decrease':'No change'}</div>
       </div>
     </div>
-    <div class="cmp-chart-wrap">
-      <div class="cmp-chart-title">Cumulative spend by day</div>
-      <div class="cmp-chart-legend">
-        <span class="cmp-legend-item"><span class="cmp-legend-line" style="background:var(--blue)"></span>${monthLabelFromKey(currentKey)}</span>
-        <span class="cmp-legend-item"><span class="cmp-legend-line" style="background:transparent;border-bottom:2px dashed #aaa"></span>${monthLabelFromKey(compareKey)}</span>
-      </div>
-      ${svgChart}
-    </div>
+    ${chartSection}
   </div>`;
 }
 
@@ -889,11 +1007,11 @@ function buildForm(){
     else formDate=fmtISO(viewYear,viewMonth,daysInMonth(viewYear,viewMonth));
   }
   const maxDate = today();
-  const minDate = fmtISO(viewYear, viewMonth, 1);
+  const minDate = '';
   const total=formRows.reduce((s,r)=>s+(parseFloat(r.amount)||0),0);
   const rowsHtml=formRows.map((r,i)=>buildFormBlock(r,i,i===0)).join('');
-  return `<div class="section-title">Log expense</div>
-  <div class="form-card" id="formCard">
+  return `<div class="form-card" id="formCard">
+    <div style="margin-bottom:12px"><span class="section-title" style="margin-bottom:0">Log expense</span></div>
     <div class="date-row">
       <span class="date-disp" id="formDateDisp">${fmtDate(formDate)}</span>
       <input type="date" id="entryDate" value="${formDate}" max="${maxDate}" min="${minDate}">
@@ -1020,7 +1138,7 @@ function buildWeekView(){
       <div class="stat-val">${fmt(weekTotal)}</div>
       ${weekBudget?`<div class="stat-sub">of ${fmt(weekBudget)}</div>`:'<div class="stat-sub" style="color:var(--orange)">No budget set</div>'}
     </div>
-    ${weekBudget?`<div class="prog-bg"><div class="prog-fill" style="width:${pct}%;background:${pct>90?'var(--red)':pct>70?'var(--orange)':'var(--text)'}"></div></div><div class="prog-meta"><span>Mon – Sun</span><span>${Math.round(pct)}% of week budget</span></div>`:''}
+    ${weekBudget?`<div class="prog-bg"><div class="prog-fill" style="width:${pct}%;background:${pct>90?'var(--red)':pct>70?'var(--orange)':'var(--text)'}"></div></div><div class="prog-meta"><span>Sun – Sat</span><span>${Math.round(pct)}% of week budget</span></div>`:''}
   </div></div>`;
 
   html+=`<div class="week-bars">`;
@@ -1746,6 +1864,39 @@ function resetNav(){ formDate=''; formRows=[{cat:Object.keys(customCats)[0]||'lu
 function bindEvents(){
   const g=id=>document.getElementById(id);
 
+  // Budget nudge punchlines rotation
+  const NUDGE_LINES=[
+    "A budget is just a plan for your money.",
+    "What gets measured, gets managed.",
+    "Set a budget. Own your month.",
+    "Small limits, big savings.",
+    "Know where every rupee goes.",
+    "Budgeting is a financial superpower.",
+    "Plan today. Thank yourself later.",
+    "Your future self wants a budget.",
+    "Track it. Tame it. Save it.",
+    "Don't guess — budget it.",
+  ];
+  let _nudgeIdx=0, _nudgeTimer=null;
+  function startNudge(){
+    const el=g('budgetNudgeText');
+    if(!el) return;
+    el.textContent=NUDGE_LINES[_nudgeIdx];
+    _nudgeTimer=setInterval(()=>{
+      const e=g('budgetNudgeText');
+      if(!e){ clearInterval(_nudgeTimer); return; }
+      e.classList.add('fade');
+      setTimeout(()=>{
+        _nudgeIdx=(_nudgeIdx+1)%NUDGE_LINES.length;
+        const e2=g('budgetNudgeText');
+        if(e2){ e2.textContent=NUDGE_LINES[_nudgeIdx]; e2.classList.remove('fade'); }
+      },400);
+    },3000);
+  }
+  if(g('budgetNudgeCard')){
+    startNudge();
+    g('budgetNudgeBtn')&&g('budgetNudgeBtn').addEventListener('click',()=>g('setBudgetBtn')&&g('setBudgetBtn').click());
+  }
   g('themeToggleBtn')&&g('themeToggleBtn').addEventListener('click', toggleTheme);
 
   g('prevMonthBtn')&&g('prevMonthBtn').addEventListener('click',()=>navigateWithCheck(()=>{viewMonth--;if(viewMonth<0){viewMonth=11;viewYear--;}resetNav();render();}));
@@ -1762,6 +1913,11 @@ function bindEvents(){
   });
   g('todayBtn')&&g('todayBtn').addEventListener('click',()=>{
     viewYear=nowYear();viewMonth=nowMonth();viewWeekStart=getWeekStart(today());resetNav();render();
+  });
+
+  g('weekPicker')&&g('weekPicker').addEventListener('change',()=>{
+    viewWeekStart=g('weekPicker').value;
+    render();
   });
 
   g('tabMonth')&&g('tabMonth').addEventListener('click',()=>navigateWithCheck(()=>{activeTab='month';render();}));
@@ -1894,15 +2050,9 @@ function bindEvents(){
   g('entryDate')&&g('entryDate').addEventListener('change',()=>{
     let val = g('entryDate').value;
     const maxDate = today();
-    const minDate = fmtISO(viewYear, viewMonth, 1);
     if(val > maxDate){
       showToast("Future dates aren't allowed");
       val = maxDate;
-      g('entryDate').value = val;
-    }
-    if(val < minDate){
-      showToast("Can only log within the current view month");
-      val = minDate;
       g('entryDate').value = val;
     }
     formDate = val;
@@ -1958,11 +2108,6 @@ function bindEvents(){
 
     if(iso > today()){
       showToast("Future dates aren't allowed");
-      return;
-    }
-    const prefix = monthKey(viewYear, viewMonth);
-    if(!iso.startsWith(prefix)){
-      showToast("Can only log within the current view month");
       return;
     }
 
