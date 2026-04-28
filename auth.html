@@ -356,7 +356,10 @@ html.dark .theme-toggle{background:var(--surface);border-color:rgba(143,155,170,
 
 <script>
 let currentTab = 'login';
-let darkMode = localStorage.getItem('exp_theme') === 'dark';
+const _savedTheme = localStorage.getItem('exp_theme');
+let darkMode = _savedTheme === 'dark' || _savedTheme === 'light'
+  ? _savedTheme === 'dark'
+  : (new Date().getHours() >= 18 || new Date().getHours() < 6);
 applyTheme();
 
 function applyTheme() {
@@ -486,7 +489,7 @@ function handleSubmit(e) {
     document.getElementById('successTitle').textContent = isReg ? `Welcome, ${name}!` : `Welcome back, ${name}!`;
     document.getElementById('successMsg').textContent   = isReg ? 'Your account is ready. Taking you to the dashboard…' : 'Signed in successfully. Taking you to the dashboard…';
 
-    setTimeout(() => { window.location.href = 'main.html'; }, 1400);
+    setTimeout(() => { window.location.href = 'index.html'; }, 1400);
   }, 900);
 }
 
@@ -510,7 +513,7 @@ function showToast(msg) {
 
 // Redirect if already logged in
 const user = JSON.parse(localStorage.getItem('exp_user') || 'null');
-if (user && user.loggedIn) window.location.href = 'main.html';
+if (user && user.loggedIn) window.location.href = 'index.html';
 </script>
 </body>
 </html>
