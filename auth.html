@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expense Tracker — Sign In</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F7F6F3;--surface:#FFFFFF;--border:#E8E5DF;
+  --text:#1A1916;--muted:#8A8680;
+  --surface-2:#FBFAF7;--surface-3:#F1EEE8;--ring:rgba(26,25,22,.08);
+  --green:#2D6A4F;--green-bg:#ECF4F0;--green-bd:#C3DDD4;
+  --red:#B5281C;--red-bg:#FDF0EF;--red-bd:#F3CECA;
+  --blue:#1D4E8F;--blue-bg:#EEF3FA;--blue-bd:#C3D3EA;
+  --radius:12px;--radius-sm:8px;
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04);
+  --shadow-lg:0 8px 40px rgba(0,0,0,.10),0 2px 8px rgba(0,0,0,.06);
+}
+html.dark{
+  --bg:#0F131A;--surface:#171C24;--surface-2:#1D2430;--surface-3:#242D3A;--border:#2B3544;
+  --text:#EDF2F7;--muted:#8F9BAA;--ring:rgba(148,163,184,.14);
+  --green:#66C18C;--green-bg:#102317;--green-bd:#224832;
+  --red:#F26B5E;--red-bg:#281412;--red-bd:#55302B;
+  --blue:#71A7FF;--blue-bg:#111D33;--blue-bd:#28456F;
+  --shadow-lg:0 24px 60px rgba(0,0,0,.38),0 4px 16px rgba(0,0,0,.22);
+}
+html{font-size:15px}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Segoe UI',system-ui,sans-serif;
+  min-height:100vh;display:flex;flex-direction:column;
+  transition:background .2s,color .2s;
+}
+html.dark body{
+  background:
+    radial-gradient(circle at 30% 20%, rgba(113,167,255,.07), transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(83,74,183,.06), transparent 40%),
+    var(--bg);
+}
+
+/* ── NAV ── */
+.nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 24px;background:var(--surface);
+  border-bottom:1px solid var(--border);
+}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-logo{
+  width:32px;height:32px;border-radius:9px;
+  background:var(--text);color:var(--surface);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:700;letter-spacing:-.02em;flex-shrink:0;
+}
+.nav-title{font-size:15px;font-weight:600;letter-spacing:-.01em}
+.theme-toggle{
+  background:none;border:1px solid var(--border);border-radius:var(--radius-sm);
+  width:32px;height:32px;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;font-size:15px;transition:all .15s;color:var(--text);
+}
+.theme-toggle:hover{background:var(--bg)}
+
+/* ── MAIN LAYOUT ── */
+.auth-wrap{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:40px 16px;
+}
+.auth-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);box-shadow:var(--shadow-lg);
+  width:100%;max-width:420px;overflow:hidden;
+}
+
+/* ── TABS ── */
+.auth-tabs{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)}
+.auth-tab{
+  padding:14px;font-size:13px;font-weight:600;text-align:center;
+  cursor:pointer;background:none;border:none;color:var(--muted);
+  font-family:inherit;transition:all .15s;border-bottom:2px solid transparent;
+  margin-bottom:-1px;
+}
+.auth-tab.active{color:var(--text);border-bottom-color:var(--text)}
+.auth-tab:hover:not(.active){color:var(--text);background:var(--bg)}
+
+/* ── FORM BODY ── */
+.auth-body{padding:28px 28px 24px}
+.auth-heading{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:4px}
+.auth-sub{font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.5}
+
+.field{margin-bottom:16px}
+.field label{
+  display:block;font-size:11px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.06em;
+  color:var(--muted);margin-bottom:6px;
+}
+.input-wrap{position:relative}
+.input-wrap .input-icon{
+  position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  font-size:15px;pointer-events:none;opacity:.5;
+}
+.field input{
+  width:100%;border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:10px 12px 10px 38px;font-family:inherit;font-size:14px;
+  color:var(--text);background:var(--bg);outline:none;
+  transition:border-color .15s,background .15s;
+}
+.field input:focus{border-color:var(--text);background:var(--surface);box-shadow:0 0 0 3px var(--ring)}
+.field input::placeholder{color:var(--muted)}
+.field input.error{border-color:var(--red)}
+
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+.password-toggle{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;color:var(--muted);
+  font-size:14px;padding:4px;transition:color .15s;
+}
+.password-toggle:hover{color:var(--text)}
+
+.field-error{font-size:11px;color:var(--red);margin-top:4px;display:none}
+.field-error.show{display:block}
+
+/* ── STRENGTH BAR ── */
+.strength-wrap{margin-top:6px;display:none}
+.strength-wrap.show{display:block}
+.strength-bars{display:flex;gap:3px;margin-bottom:4px}
+.strength-bar{flex:1;height:3px;border-radius:99px;background:var(--border);transition:background .2s}
+.strength-label{font-size:11px;color:var(--muted)}
+
+/* ── DIVIDER ── */
+.auth-divider{
+  display:flex;align-items:center;gap:10px;
+  margin:20px 0;font-size:11px;color:var(--muted);
+}
+.auth-divider::before,.auth-divider::after{
+  content:'';flex:1;height:1px;background:var(--border);
+}
+
+/* ── SOCIAL BUTTONS ── */
+.social-btns{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.social-btn{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:10px 16px;border:1px solid var(--border);border-radius:var(--radius-sm);
+  background:var(--surface);color:var(--text);font-family:inherit;
+  font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;
+}
+.social-btn:hover{background:var(--bg);border-color:var(--text)}
+.social-icon{width:18px;height:18px;flex-shrink:0}
+
+/* ── SUBMIT ── */
+.btn-submit{
+  width:100%;padding:11px;border-radius:var(--radius-sm);
+  background:var(--text);color:var(--surface);border:none;
+  font-family:inherit;font-size:14px;font-weight:600;
+  cursor:pointer;transition:opacity .15s;margin-top:4px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-submit:hover{opacity:.85}
+.btn-submit:active{transform:scale(.98)}
+.btn-submit .spinner{
+  width:14px;height:14px;border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff;border-radius:50%;
+  animation:spin .6s linear infinite;display:none;
+}
+.btn-submit.loading .spinner{display:block}
+.btn-submit.loading .btn-text{opacity:.7}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── FOOTER LINKS ── */
+.auth-footer{
+  text-align:center;font-size:12px;color:var(--muted);
+  padding:16px 28px 20px;border-top:1px solid var(--border);
+  background:var(--surface-2);
+}
+.auth-footer a{color:var(--text);font-weight:600;text-decoration:none}
+.auth-footer a:hover{text-decoration:underline}
+
+.forgot-link{
+  display:block;text-align:right;font-size:12px;
+  color:var(--muted);text-decoration:none;margin-top:-10px;margin-bottom:16px;
+}
+.forgot-link:hover{color:var(--text)}
+
+/* ── TERMS ── */
+.terms-text{font-size:11px;color:var(--muted);margin-top:14px;text-align:center;line-height:1.6}
+.terms-text a{color:var(--muted);text-decoration:underline}
+
+/* ── SUCCESS STATE ── */
+.auth-success{
+  display:none;flex-direction:column;align-items:center;
+  justify-content:center;padding:48px 28px;text-align:center;gap:12px;
+}
+.auth-success.show{display:flex}
+.success-icon{
+  width:56px;height:56px;border-radius:50%;
+  background:var(--green-bg);border:1px solid var(--green-bd);
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;margin-bottom:4px;
+}
+.auth-success h3{font-size:18px;font-weight:700}
+.auth-success p{font-size:13px;color:var(--muted);line-height:1.5;max-width:280px}
+
+/* ── TOAST ── */
+#toast{
+  position:fixed;bottom:24px;left:50%;
+  transform:translateX(-50%) translateY(60px);
+  background:var(--text);color:var(--surface);
+  padding:9px 22px;border-radius:99px;font-size:13px;font-weight:600;
+  transition:transform .25s;z-index:999;pointer-events:none;
+  white-space:nowrap;
+}
+#toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ── DARK OVERRIDES ── */
+html.dark .auth-card{background:var(--surface);border-color:rgba(143,155,170,.14);box-shadow:var(--shadow-lg)}
+html.dark .field input{background:var(--surface-2);border-color:rgba(143,155,170,.16)}
+html.dark .field input:focus{background:var(--surface-3);border-color:rgba(113,167,255,.38)}
+html.dark .social-btn{background:var(--surface-2);border-color:rgba(143,155,170,.16)}
+html.dark .social-btn:hover{background:var(--surface-3);border-color:rgba(113,167,255,.28)}
+html.dark .auth-footer{background:var(--surface-2);border-color:rgba(143,155,170,.12)}
+html.dark .btn-submit{background:#E7EDF6;color:#121821}
+html.dark .nav{background:rgba(13,18,26,.86);backdrop-filter:blur(16px);border-bottom-color:rgba(143,155,170,.16)}
+html.dark .theme-toggle{background:var(--surface);border-color:rgba(143,155,170,.16)}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <div class="nav-logo">₹</div>
+    <span class="nav-title">Expense Tracker</span>
+  </div>
+  <button class="theme-toggle" id="themeToggle" title="Toggle theme">🌙</button>
+</nav>
+
+<div class="auth-wrap">
+  <div class="auth-card">
+
+    <!-- TABS -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
+      <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">Create Account</button>
+    </div>
+
+    <!-- SUCCESS STATE -->
+    <div class="auth-success" id="successState">
+      <div class="success-icon">✓</div>
+      <h3 id="successTitle">Welcome back!</h3>
+      <p id="successMsg">Signing you in…</p>
+    </div>
+
+    <!-- FORM BODY -->
+    <div id="formBody">
+      <div class="auth-body">
+        <h2 class="auth-heading" id="formHeading">Welcome back</h2>
+        <p class="auth-sub" id="formSub">Sign in to your account to continue tracking expenses.</p>
+
+        <!-- SOCIAL -->
+        <div class="social-btns">
+          <button class="social-btn" onclick="socialAuth('Google')">
+            <svg class="social-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            Continue with Google
+          </button>
+          <button class="social-btn" onclick="socialAuth('GitHub')">
+            <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+            Continue with GitHub
+          </button>
+        </div>
+
+        <div class="auth-divider">or continue with email</div>
+
+        <form id="authForm" onsubmit="handleSubmit(event)" novalidate>
+
+          <!-- Register-only fields -->
+          <div id="nameFields" style="display:none">
+            <div class="field-row">
+              <div class="field">
+                <label>First name</label>
+                <div class="input-wrap">
+                  <span class="input-icon">👤</span>
+                  <input type="text" id="firstName" placeholder="John" autocomplete="given-name">
+                </div>
+                <div class="field-error" id="firstNameErr">Enter your first name</div>
+              </div>
+              <div class="field">
+                <label>Last name</label>
+                <div class="input-wrap">
+                  <span class="input-icon">👤</span>
+                  <input type="text" id="lastName" placeholder="Doe" autocomplete="family-name">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Email address</label>
+            <div class="input-wrap">
+              <span class="input-icon">✉️</span>
+              <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
+            </div>
+            <div class="field-error" id="emailErr">Enter a valid email address</div>
+          </div>
+
+          <div class="field">
+            <label>Password</label>
+            <div class="input-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+              <button type="button" class="password-toggle" id="pwToggle" onclick="togglePw('password','pwToggle')">👁</button>
+            </div>
+            <div class="field-error" id="passwordErr">Password must be at least 8 characters</div>
+            <div class="strength-wrap" id="strengthWrap">
+              <div class="strength-bars">
+                <div class="strength-bar" id="sb1"></div>
+                <div class="strength-bar" id="sb2"></div>
+                <div class="strength-bar" id="sb3"></div>
+                <div class="strength-bar" id="sb4"></div>
+              </div>
+              <span class="strength-label" id="strengthLabel">Weak</span>
+            </div>
+          </div>
+
+          <!-- Register-only confirm password -->
+          <div class="field" id="confirmField" style="display:none">
+            <label>Confirm password</label>
+            <div class="input-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="confirmPassword" placeholder="••••••••" autocomplete="new-password">
+              <button type="button" class="password-toggle" id="cpwToggle" onclick="togglePw('confirmPassword','cpwToggle')">👁</button>
+            </div>
+            <div class="field-error" id="confirmErr">Passwords do not match</div>
+          </div>
+
+          <a href="#" class="forgot-link" id="forgotLink" onclick="forgotPassword(event)">Forgot password?</a>
+
+          <button type="submit" class="btn-submit" id="submitBtn">
+            <div class="spinner"></div>
+            <span class="btn-text" id="submitText">Sign In</span>
+          </button>
+
+          <p class="terms-text" id="termsText" style="display:none">
+            By creating an account you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+          </p>
+        </form>
+      </div>
+
+      <div class="auth-footer">
+        <span id="footerText">Don't have an account? <a href="#" onclick="switchTab('register');return false">Create one free</a></span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+let currentTab = 'login';
+let darkMode = localStorage.getItem('exp_theme') === 'dark';
+applyTheme();
+
+function applyTheme() {
+  document.documentElement.classList.toggle('dark', darkMode);
+  document.getElementById('themeToggle').textContent = darkMode ? '☀️' : '🌙';
+}
+
+document.getElementById('themeToggle').addEventListener('click', () => {
+  darkMode = !darkMode;
+  localStorage.setItem('exp_theme', darkMode ? 'dark' : 'light');
+  applyTheme();
+});
+
+function switchTab(tab) {
+  currentTab = tab;
+  const isReg = tab === 'register';
+
+  document.getElementById('tabLogin').classList.toggle('active', !isReg);
+  document.getElementById('tabRegister').classList.toggle('active', isReg);
+
+  document.getElementById('formHeading').textContent   = isReg ? 'Create your account' : 'Welcome back';
+  document.getElementById('formSub').textContent       = isReg ? 'Start tracking your expenses for free.' : 'Sign in to your account to continue tracking expenses.';
+  document.getElementById('submitText').textContent    = isReg ? 'Create Account' : 'Sign In';
+  document.getElementById('nameFields').style.display  = isReg ? '' : 'none';
+  document.getElementById('confirmField').style.display= isReg ? '' : 'none';
+  document.getElementById('forgotLink').style.display  = isReg ? 'none' : 'block';
+  document.getElementById('termsText').style.display   = isReg ? 'block' : 'none';
+  document.getElementById('strengthWrap').classList.toggle('show', false);
+  document.getElementById('footerText').innerHTML      = isReg
+    ? 'Already have an account? <a href="#" onclick="switchTab(\'login\');return false">Sign in</a>'
+    : 'Don\'t have an account? <a href="#" onclick="switchTab(\'register\');return false">Create one free</a>';
+
+  document.getElementById('password').autocomplete = isReg ? 'new-password' : 'current-password';
+  clearErrors();
+}
+
+function togglePw(inputId, btnId) {
+  const inp = document.getElementById(inputId);
+  const btn = document.getElementById(btnId);
+  const show = inp.type === 'password';
+  inp.type = show ? 'text' : 'password';
+  btn.textContent = show ? '🙈' : '👁';
+}
+
+// Password strength
+document.getElementById('password').addEventListener('input', function() {
+  if (currentTab !== 'register') return;
+  const val = this.value;
+  const wrap = document.getElementById('strengthWrap');
+  if (!val) { wrap.classList.remove('show'); return; }
+  wrap.classList.add('show');
+
+  let score = 0;
+  if (val.length >= 8)  score++;
+  if (/[A-Z]/.test(val)) score++;
+  if (/[0-9]/.test(val)) score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+
+  const colors = ['var(--red)','var(--orange)','#C4A020','var(--green)'];
+  const labels = ['Weak','Fair','Good','Strong'];
+  for (let i = 1; i <= 4; i++) {
+    const bar = document.getElementById('sb' + i);
+    bar.style.background = i <= score ? colors[score - 1] : 'var(--border)';
+  }
+  document.getElementById('strengthLabel').textContent = labels[score - 1] || 'Weak';
+  document.getElementById('strengthLabel').style.color = colors[score - 1] || 'var(--muted)';
+});
+
+function clearErrors() {
+  document.querySelectorAll('.field-error').forEach(e => e.classList.remove('show'));
+  document.querySelectorAll('.field input').forEach(e => e.classList.remove('error'));
+}
+
+function showError(fieldId, errId) {
+  const inp = document.getElementById(fieldId);
+  const err = document.getElementById(errId);
+  if (inp) inp.classList.add('error');
+  if (err) err.classList.add('show');
+}
+
+function validate() {
+  clearErrors();
+  let ok = true;
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+
+  if (currentTab === 'register') {
+    if (!document.getElementById('firstName').value.trim()) {
+      showError('firstName', 'firstNameErr'); ok = false;
+    }
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showError('email', 'emailErr'); ok = false;
+  }
+  if (password.length < 8) {
+    showError('password', 'passwordErr'); ok = false;
+  }
+  if (currentTab === 'register') {
+    const confirm = document.getElementById('confirmPassword').value;
+    if (confirm !== password) {
+      showError('confirmPassword', 'confirmErr'); ok = false;
+    }
+  }
+  return ok;
+}
+
+function handleSubmit(e) {
+  e.preventDefault();
+  if (!validate()) return;
+
+  const btn = document.getElementById('submitBtn');
+  btn.classList.add('loading');
+
+  setTimeout(() => {
+    btn.classList.remove('loading');
+    const isReg = currentTab === 'register';
+
+    // Save auth state
+    const email = document.getElementById('email').value.trim();
+    const name  = isReg ? (document.getElementById('firstName').value.trim() || email.split('@')[0]) : email.split('@')[0];
+    localStorage.setItem('exp_user', JSON.stringify({ email, name, loggedIn: true }));
+
+    // Show success
+    document.getElementById('formBody').style.display = 'none';
+    const s = document.getElementById('successState');
+    s.classList.add('show');
+    document.getElementById('successTitle').textContent = isReg ? `Welcome, ${name}!` : `Welcome back, ${name}!`;
+    document.getElementById('successMsg').textContent   = isReg ? 'Your account is ready. Taking you to the dashboard…' : 'Signed in successfully. Taking you to the dashboard…';
+
+    setTimeout(() => { window.location.href = 'main.html'; }, 1400);
+  }, 900);
+}
+
+function socialAuth(provider) {
+  showToast(`${provider} auth coming soon`);
+}
+
+function forgotPassword(e) {
+  e.preventDefault();
+  const email = document.getElementById('email').value.trim();
+  if (!email) { showError('email', 'emailErr'); return; }
+  showToast('Password reset link sent!');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// Redirect if already logged in
+const user = JSON.parse(localStorage.getItem('exp_user') || 'null');
+if (user && user.loggedIn) window.location.href = 'main.html';
+</script>
+</body>
+</html>
