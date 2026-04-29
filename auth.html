@@ -3,27 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Expense Tracker — Sign In</title>
+<title>SpendWise — Sign In</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%231A56DB'/%3E%3Cstop offset='100%25' stop-color='%235B4FCF'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M5 23L10 17L15 20L27 10M27 10V16M27 10H21' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='10' cy='17' r='2' fill='white'/%3E%3Ccircle cx='15' cy='20' r='2' fill='white'/%3E%3Ccircle cx='27' cy='10' r='2' fill='white'/%3E%3C/svg%3E">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#F7F6F3;--surface:#FFFFFF;--border:#E8E5DF;
-  --text:#1A1916;--muted:#8A8680;
-  --surface-2:#FBFAF7;--surface-3:#F1EEE8;--ring:rgba(26,25,22,.08);
-  --green:#2D6A4F;--green-bg:#ECF4F0;--green-bd:#C3DDD4;
-  --red:#B5281C;--red-bg:#FDF0EF;--red-bd:#F3CECA;
-  --blue:#1D4E8F;--blue-bg:#EEF3FA;--blue-bd:#C3D3EA;
-  --radius:12px;--radius-sm:8px;
-  --shadow:0 1px 3px rgba(0,0,0,.06),0 4px 16px rgba(0,0,0,.04);
-  --shadow-lg:0 8px 40px rgba(0,0,0,.10),0 2px 8px rgba(0,0,0,.06);
+  --bg:#F4F6FB;--surface:#FFFFFF;--border:#DDE3F0;
+  --text:#0D1526;--muted:#64748B;
+  --surface-2:#F0F3FA;--surface-3:#E6EBF5;--ring:rgba(26,86,219,.12);
+  --primary:#1A56DB;--accent:#5B4FCF;
+  --green:#0F7B55;--green-bg:#E6F7F1;--green-bd:#86D4B8;
+  --red:#C0392B;--red-bg:#FEF0EE;--red-bd:#F5B8B3;
+  --blue:#1A56DB;--blue-bg:#EBF2FF;--blue-bd:#93BFFA;
+  --radius:14px;--radius-sm:9px;
+  --shadow:0 1px 3px rgba(13,21,38,.05),0 4px 20px rgba(13,21,38,.07);
+  --shadow-lg:0 8px 40px rgba(13,21,38,.12),0 2px 8px rgba(13,21,38,.06);
 }
 html.dark{
-  --bg:#0F131A;--surface:#171C24;--surface-2:#1D2430;--surface-3:#242D3A;--border:#2B3544;
-  --text:#EDF2F7;--muted:#8F9BAA;--ring:rgba(148,163,184,.14);
-  --green:#66C18C;--green-bg:#102317;--green-bd:#224832;
-  --red:#F26B5E;--red-bg:#281412;--red-bd:#55302B;
-  --blue:#71A7FF;--blue-bg:#111D33;--blue-bd:#28456F;
-  --shadow-lg:0 24px 60px rgba(0,0,0,.38),0 4px 16px rgba(0,0,0,.22);
+  --bg:#080D18;--surface:#0F1624;--surface-2:#162030;--surface-3:#1D2A3E;--border:#1E2D45;
+  --text:#E2EAFF;--muted:#6B82A8;--ring:rgba(77,142,255,.15);
+  --primary:#4D8EFF;--accent:#8B7FFF;
+  --green:#3EC98A;--green-bg:#081A12;--green-bd:#144A30;
+  --red:#F07060;--red-bg:#1A0A08;--red-bd:#3A1818;
+  --blue:#4D8EFF;--blue-bg:#0A1628;--blue-bd:#1A3560;
+  --shadow-lg:0 24px 60px rgba(0,0,0,.5),0 4px 16px rgba(0,0,0,.3);
 }
 html{font-size:15px}
 body{
@@ -48,9 +51,10 @@ html.dark body{
 .nav-brand{display:flex;align-items:center;gap:10px}
 .nav-logo{
   width:32px;height:32px;border-radius:9px;
-  background:var(--text);color:var(--surface);
+  background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;
   display:flex;align-items:center;justify-content:center;
   font-size:16px;font-weight:700;letter-spacing:-.02em;flex-shrink:0;
+  box-shadow:0 2px 10px rgba(26,86,219,.35);
 }
 .nav-title{font-size:15px;font-weight:600;letter-spacing:-.01em}
 .theme-toggle{
@@ -150,12 +154,13 @@ html.dark body{
 /* ── SUBMIT ── */
 .btn-submit{
   width:100%;padding:11px;border-radius:var(--radius-sm);
-  background:var(--text);color:var(--surface);border:none;
+  background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;border:none;
   font-family:inherit;font-size:14px;font-weight:600;
-  cursor:pointer;transition:opacity .15s;margin-top:4px;
+  cursor:pointer;transition:opacity .15s,box-shadow .15s;margin-top:4px;
   display:flex;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 4px 14px rgba(26,86,219,.3);
 }
-.btn-submit:hover{opacity:.85}
+.btn-submit:hover{opacity:.92;box-shadow:0 6px 20px rgba(26,86,219,.4)}
 .btn-submit:active{transform:scale(.98)}
 .btn-submit .spinner{
   width:14px;height:14px;border:2px solid rgba(255,255,255,.3);
@@ -218,7 +223,7 @@ html.dark .field input:focus{background:var(--surface-3);border-color:rgba(113,1
 html.dark .social-btn{background:var(--surface-2);border-color:rgba(143,155,170,.16)}
 html.dark .social-btn:hover{background:var(--surface-3);border-color:rgba(113,167,255,.28)}
 html.dark .auth-footer{background:var(--surface-2);border-color:rgba(143,155,170,.12)}
-html.dark .btn-submit{background:#E7EDF6;color:#121821}
+html.dark .btn-submit{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff}
 html.dark .nav{background:rgba(13,18,26,.86);backdrop-filter:blur(16px);border-bottom-color:rgba(143,155,170,.16)}
 html.dark .theme-toggle{background:var(--surface);border-color:rgba(143,155,170,.16)}
 
@@ -242,8 +247,15 @@ html.dark .theme-toggle{background:var(--surface);border-color:rgba(143,155,170,
 
 <nav class="nav">
   <div class="nav-brand">
-    <div class="nav-logo">₹</div>
-    <span class="nav-title">Expense Tracker</span>
+    <div class="nav-logo">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 18L8 14L12 16L20 8M20 8V13M20 8H15" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="8" cy="14" r="1.5" fill="white"/>
+        <circle cx="12" cy="16" r="1.5" fill="white"/>
+        <circle cx="20" cy="8" r="1.5" fill="white"/>
+      </svg>
+    </div>
+    <span class="nav-title">Spend<span style="color:#1A56DB">Wise</span></span>
   </div>
   <button class="theme-toggle" id="themeToggle" title="Toggle theme">🌙</button>
 </nav>
