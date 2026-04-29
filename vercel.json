@@ -1,0 +1,8 @@
+{
+  "cleanUrls": true,
+  "redirects": [
+    { "source": "/main.html", "destination": "/index", "permanent": false },
+    { "source": "/index.html", "destination": "/", "permanent": true },
+    { "source": "/auth.html", "destination": "/auth", "permanent": true }
+  ]
+}
