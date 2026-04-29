@@ -411,12 +411,13 @@ document.getElementById('themeToggle').addEventListener('click', () => {
   applyTheme();
 });
 
-// ── If already signed in, redirect ──
+// ── If already signed in, redirect (only if not just signed out) ──
 onAuthStateChanged(auth, user => {
-  if (user) {
+  if (user && !sessionStorage.getItem('exp_signed_out')) {
     localStorage.setItem('exp_user', JSON.stringify({ email: user.email, name: user.displayName || user.email.split('@')[0], loggedIn: true, uid: user.uid }));
     window.location.href = 'index.html';
   }
+  sessionStorage.removeItem('exp_signed_out');
 });
 
 // ── Tab switching ──
