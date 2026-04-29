@@ -3,39 +3,176 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Expense Tracker</title>
+<title>SpendWise</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%231A56DB'/%3E%3Cstop offset='100%25' stop-color='%235B4FCF'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M5 23L10 17L15 20L27 10M27 10V16M27 10H21' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='10' cy='17' r='2' fill='white'/%3E%3Ccircle cx='15' cy='20' r='2' fill='white'/%3E%3Ccircle cx='27' cy='10' r='2' fill='white'/%3E%3C/svg%3E">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#F0F2F5;--surface:#FFFFFF;--border:#E2E6ED;
-  --text:#0F1923;--muted:#6B7A8D;
-  --surface-2:#F7F9FC;--surface-3:#EDF0F5;--ring:rgba(15,25,35,.08);
-  --green:#1A7F5A;--green-bg:#E8F7F1;--green-bd:#A8DFC8;
-  --red:#C0392B;--red-bg:#FEF0EE;--red-bd:#F5C0BB;
-  --orange:#D4680A;--orange-bg:#FEF4E8;--orange-bd:#F5D5A8;
-  --blue:#1A56DB;--blue-bg:#EBF2FF;--blue-bd:#AECBFA;
-  --purple:#5B4FCF;--purple-bg:#EEECFD;--purple-bd:#B5AFEE;
+  /* SpendWise Light Theme — Blue/Purple primary, cool grey neutrals */
+  --bg:#F4F6FB;
+  --surface:#FFFFFF;
+  --surface-2:#F0F3FA;
+  --surface-3:#E6EBF5;
+  --border:#DDE3F0;
+  --text:#0D1526;
+  --muted:#64748B;
+  --ring:rgba(26,86,219,.12);
+
+  /* Brand */
+  --primary:#1A56DB;
+  --primary-dark:#1440B0;
+  --primary-light:#EBF2FF;
+  --accent:#5B4FCF;
+  --accent-light:#EEECFD;
+
+  /* Semantic */
+  --green:#0F7B55;--green-bg:#E6F7F1;--green-bd:#86D4B8;
+  --red:#C0392B;--red-bg:#FEF0EE;--red-bd:#F5B8B3;
+  --orange:#C05621;--orange-bg:#FEF3E8;--orange-bd:#F5CFA8;
+  --blue:#1A56DB;--blue-bg:#EBF2FF;--blue-bd:#93BFFA;
+  --purple:#5B4FCF;--purple-bg:#EEECFD;--purple-bd:#A89EEC;
+
   --radius:14px;--radius-sm:9px;
-  --shadow:0 1px 2px rgba(0,0,0,.04),0 4px 20px rgba(0,0,0,.06);
-  --shadow-md:0 4px 12px rgba(0,0,0,.08),0 1px 3px rgba(0,0,0,.04);
+  --shadow:0 1px 3px rgba(13,21,38,.05),0 4px 20px rgba(13,21,38,.07);
+  --shadow-md:0 4px 16px rgba(13,21,38,.1),0 1px 4px rgba(13,21,38,.05);
 }
 html.dark{
-  --bg:#0B0F17;--surface:#131920;--surface-2:#1A2130;--surface-3:#212C3D;--border:#263040;
-  --text:#E8EFF8;--muted:#7A8FA6;--ring:rgba(168,193,224,.12);
-  --green:#4DC98A;--green-bg:#0C2018;--green-bd:#1A4A30;
-  --red:#F07060;--red-bg:#220F0D;--red-bd:#4A2020;
-  --orange:#F5A840;--orange-bg:#201508;--orange-bd:#4A3010;
-  --blue:#5B9BFF;--blue-bg:#0D1A30;--blue-bd:#1E3A6A;
-  --purple:#8B7FFF;--purple-bg:#150F2A;--purple-bd:#352870;
-  --shadow:0 20px 50px rgba(0,0,0,.4),0 2px 12px rgba(0,0,0,.25);
-  --shadow-md:0 8px 24px rgba(0,0,0,.3),0 2px 6px rgba(0,0,0,.2);
+  /* SpendWise Dark Theme — Deep navy, blue glow */
+  --bg:#080D18;
+  --surface:#0F1624;
+  --surface-2:#162030;
+  --surface-3:#1D2A3E;
+  --border:#1E2D45;
+  --text:#E2EAFF;
+  --muted:#6B82A8;
+  --ring:rgba(91,155,255,.15);
+
+  --primary:#4D8EFF;
+  --primary-dark:#3A7AEE;
+  --primary-light:#0D1A30;
+  --accent:#8B7FFF;
+  --accent-light:#150F2A;
+
+  --green:#3EC98A;--green-bg:#081A12;--green-bd:#144A30;
+  --red:#F07060;--red-bg:#1A0A08;--red-bd:#3A1818;
+  --orange:#F5A840;--orange-bg:#180E04;--orange-bd:#3A2808;
+  --blue:#4D8EFF;--blue-bg:#0A1628;--blue-bd:#1A3560;
+  --purple:#8B7FFF;--purple-bg:#100C22;--purple-bd:#2A2060;
+
+  --shadow:0 20px 60px rgba(0,0,0,.5),0 2px 12px rgba(0,0,0,.3);
+  --shadow-md:0 8px 28px rgba(0,0,0,.35),0 2px 8px rgba(0,0,0,.2);
 }
 html{font-size:15px}
 body{background:var(--bg);color:var(--text);font-family:'Inter','Segoe UI',system-ui,sans-serif;min-height:100vh;padding-bottom:60px;transition:background .25s,color .25s}
+
+/* ── SIDEBAR ── */
+:root{--sb-width:320px}
+.sb-toggle{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:500;width:22px;height:56px;background:var(--surface-2);border:1px solid var(--border);border-left:none;border-radius:0 10px 10px 0;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:2px 0 8px rgba(0,0,0,.08);transition:left .3s cubic-bezier(.4,0,.2,1),background .15s}
+.sb-toggle:hover{background:var(--surface-3)}
+.sb-toggle svg{transition:transform .3s}
+/* When open: button moves to right edge of sidebar, arrow points left */
+@media(min-width:900px){.sb-toggle.open{left:var(--sb-width)}}
+.sb-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:498;opacity:0;pointer-events:none;transition:opacity .3s}
+.sb-overlay.show{opacity:1;pointer-events:auto}
+.sidebar{position:fixed;left:calc(-1 * var(--sb-width));top:0;width:var(--sb-width);height:100vh;background:var(--surface);border-right:1px solid var(--border);z-index:499;transition:left .3s cubic-bezier(.4,0,.2,1);overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow-md)}
+.sidebar.open{left:0}
+.sb-header{padding:16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--surface-2)}
+.sb-header-brand{display:flex;align-items:center;gap:10px}
+.sb-header-icon{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 2px 8px rgba(26,86,219,.3)}
+.sb-header-title{font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.01em}
+.sb-header-sub{font-size:10px;color:var(--muted);margin-top:1px}
+.sb-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:20px;padding:4px;transition:color .15s;line-height:1}
+.sb-close:hover{color:var(--text)}
+.sb-body{flex:1;padding:4px 0}
+.sb-section{border-bottom:1px solid var(--border)}
+.sb-section-header{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;cursor:pointer;transition:background .15s;user-select:none}
+.sb-section-header:hover{background:var(--surface-2)}
+.sb-section-title{font-size:13px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:8px}
+.sb-section-icon{font-size:15px}
+.sb-chevron{color:var(--muted);font-size:11px;transition:transform .25s;flex-shrink:0}
+.sb-section.open .sb-chevron{transform:rotate(90deg)}
+.sb-section-body{display:none;padding:4px 16px 16px}
+.sb-section.open .sb-section-body{display:block}
+.sb-label{font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;display:block;margin-top:10px}
+.sb-label:first-child{margin-top:0}
+.sb-input,.sb-select{width:100%;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 11px;font-size:13px;color:var(--text);font-family:inherit;outline:none;transition:border-color .15s;appearance:none}
+.sb-input:focus,.sb-select:focus{border-color:var(--primary);box-shadow:0 0 0 2px rgba(26,86,219,.12)}
+.sb-input::placeholder{color:var(--muted)}
+.sb-row{margin-bottom:10px}
+.sb-2col{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sb-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;margin-bottom:4px}
+.sb-toggle-label{font-size:13px;color:var(--text);font-weight:500}
+.sw-wrap{position:relative;width:40px;height:22px;flex-shrink:0}
+.sw-wrap input{opacity:0;width:0;height:0;position:absolute}
+.sw-slider{position:absolute;inset:0;background:var(--border);border-radius:99px;cursor:pointer;transition:background .2s}
+.sw-slider::before{content:'';position:absolute;width:16px;height:16px;left:3px;top:3px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.sw-wrap input:checked+.sw-slider{background:var(--primary)}
+.sw-wrap input:checked+.sw-slider::before{transform:translateX(18px)}
+.sb-prog-bg{height:7px;background:var(--surface-3);border-radius:99px;overflow:hidden;margin:6px 0 2px}
+.sb-prog-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width .5s}
+.sb-prog-fill.blue{background:linear-gradient(90deg,var(--primary),var(--accent))}
+.sb-prog-fill.green{background:linear-gradient(90deg,var(--green),#059669)}
+.sb-prog-meta{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:8px}
+.sb-chips{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0 10px}
+.sb-chip{padding:5px 11px;border-radius:99px;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);font-size:11px;font-weight:500;cursor:pointer;transition:all .15s}
+.sb-chip.active{background:var(--primary);border-color:var(--primary);color:#fff}
+.sb-chip-amt{display:none;align-items:center;gap:6px;margin-bottom:8px;background:var(--surface-2);border-radius:8px;padding:6px 10px;border:1px solid var(--border)}
+.sb-chip-amt.show{display:flex}
+.sb-chip-amt span{font-size:12px;color:var(--muted)}
+.sb-chip-amt input{flex:1;background:none;border:none;color:var(--text);font-size:13px;font-weight:600;outline:none;width:60px}
+.sb-stat-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border)}
+.sb-stat-row:last-child{border-bottom:none}
+.sb-stat-lbl{font-size:12px;color:var(--muted)}
+.sb-stat-val{font-size:13px;font-weight:700;color:var(--text)}
+.sb-stat-val.orange{color:var(--orange)}
+.sb-stat-val.blue{color:var(--blue)}
+.sb-stat-val.green{color:var(--green)}
+.sb-donut-wrap{display:flex;align-items:center;gap:14px;margin:10px 0}
+.sb-legend{flex:1}
+.sb-legend-item{display:flex;align-items:center;gap:7px;margin-bottom:7px;font-size:12px;color:var(--text)}
+.sb-legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.sb-bar-row{margin-bottom:8px}
+.sb-bar-label{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:3px}
+.sb-bar-bg{height:5px;background:var(--surface-3);border-radius:99px;overflow:hidden}
+.sb-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width .4s}
+.sb-bar-fill.blue{background:linear-gradient(90deg,var(--primary),var(--accent))}
+.sb-bar-fill.green{background:linear-gradient(90deg,var(--green),#34D399)}
+.sb-emi-item{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-bottom:8px}
+.sb-emi-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.sb-emi-name{font-size:13px;font-weight:600;color:var(--text)}
+.sb-emi-lender{font-size:11px;color:var(--muted);margin-top:1px}
+.sb-emi-amt{font-size:13px;font-weight:700;color:var(--primary)}
+.sb-emi-due{font-size:11px;font-weight:600;color:var(--muted);margin-top:6px}
+.sb-emi-due.urgent{color:var(--red)}
+.sb-emi-due.soon{color:var(--orange)}
+.sb-add-btn{width:100%;padding:9px;border-radius:var(--radius-sm);border:1.5px dashed var(--border);background:none;color:var(--muted);font-size:13px;font-family:inherit;cursor:pointer;transition:all .15s;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:6px}
+.sb-add-btn:hover{border-color:var(--primary);color:var(--primary)}
+.sb-solid-btn{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;border:none;border-radius:var(--radius-sm);padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity .15s;box-shadow:0 2px 8px rgba(26,86,219,.25)}
+.sb-solid-btn:hover{opacity:.9}
+.sb-ghost-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:var(--radius-sm);padding:7px 12px;font-size:12px;cursor:pointer;font-family:inherit;transition:all .15s}
+.sb-ghost-btn:hover{border-color:var(--text);color:var(--text)}
+.sb-footer{padding:12px 16px;border-top:1px solid var(--border);background:var(--surface-2);flex-shrink:0;text-align:center}
+.sb-footer-text{font-size:12px;color:var(--muted)}
+.sb-footer-text strong{color:var(--primary);font-size:14px}
+.sb-divider{height:1px;background:var(--border);margin:10px 0}
+.sb-info{font-size:11px;color:var(--muted);text-align:center;padding:12px 0}
+.sb-payment-tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:600;margin-left:4px}
+.sb-payment-tag.cash{background:var(--orange-bg);color:var(--orange)}
+.sb-payment-tag.upi{background:var(--blue-bg);color:var(--blue)}
+.sb-payment-tag.card{background:var(--purple-bg);color:var(--purple)}
+.sb-payment-tag.nb{background:var(--green-bg);color:var(--green)}
+.app-wrap{transition:margin-left .3s cubic-bezier(.4,0,.2,1)}
+@media(min-width:900px){.app-wrap.sb-open{margin-left:var(--sb-width)}}
+@media(max-width:899px){.sidebar{width:min(320px,100vw)}}
+html.dark body{background:radial-gradient(ellipse 80% 40% at 50% 0%,rgba(26,86,219,.12) 0%,transparent 60%),var(--bg)}
 html.dark body{background:radial-gradient(ellipse at top,rgba(91,155,255,.06) 0%,transparent 50%),var(--bg)}
 .nav{display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;transition:background .25s,border-color .25s;min-height:60px;box-shadow:0 1px 0 var(--border)}
 html.dark .nav{background:rgba(13,19,26,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom-color:rgba(38,48,64,.8);box-shadow:0 1px 0 rgba(38,48,64,.6)}
-.nav-center{position:absolute;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none}
+.nav-logo-wrap{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
+.nav-logo-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 10px rgba(26,86,219,.35)}
+.nav-logo-icon svg{display:block}
+.nav-logo-name{font-size:14px;font-weight:700;letter-spacing:-.02em;color:var(--text);white-space:nowrap}
+.nav-logo-name span{color:var(--primary)}
 .nav-center .today-btn{pointer-events:auto}
 .nav-title{font-size:15px;font-weight:700;letter-spacing:-.02em;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:280px}
 .nav-sub{font-size:11px;color:var(--muted);margin-top:1px;text-align:center;white-space:nowrap;letter-spacing:.01em}
@@ -60,19 +197,19 @@ html.dark .nav{background:rgba(13,19,26,.92);backdrop-filter:blur(20px);-webkit-
 .tabs{display:flex;gap:4px;margin-bottom:18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:4px;box-shadow:var(--shadow)}
 .tab{flex:1;padding:8px;background:transparent;border:none;border-radius:10px;font-size:13px;font-weight:500;cursor:pointer;text-align:center;color:var(--muted);transition:all .18s;font-family:inherit;letter-spacing:.01em}
 .tab:hover:not(.active){background:var(--surface-2);color:var(--text)}
-.tab.active{background:var(--text);color:var(--surface);font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.tab.active{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;font-weight:600;box-shadow:0 2px 12px rgba(26,86,219,.3)}
 .section-title{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px}
 .budget-banner{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin-bottom:14px;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .budget-banner.unset{border-color:var(--orange-bd);background:var(--orange-bg)}
-.budget-nudge-card{display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:16px;background:linear-gradient(135deg,rgba(26,86,219,.07),rgba(91,79,207,.05));border:1px solid var(--blue-bd);box-shadow:0 4px 24px rgba(26,86,219,.08);transition:transform .2s ease,box-shadow .2s ease;cursor:default}
-.budget-nudge-card:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(26,86,219,.14)}
+.budget-nudge-card{display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:16px;background:linear-gradient(135deg,rgba(26,86,219,.07),rgba(91,79,207,.06));border:1px solid rgba(26,86,219,.15);box-shadow:0 4px 24px rgba(26,86,219,.08);transition:transform .2s ease,box-shadow .2s ease;cursor:default}
+.budget-nudge-card:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(26,86,219,.15)}
 .bnc-icon{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--blue-bg),var(--purple-bg));display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 2px 10px rgba(26,86,219,.15)}
 .bnc-body{flex:1;min-width:0}
 .bnc-title{font-size:16px;font-weight:700;color:var(--text);letter-spacing:-.01em;min-height:24px;transition:opacity .4s ease}
 .bnc-title.fade{opacity:0}
 .bnc-sub{font-size:12px;color:var(--muted);margin-top:3px}
-.bnc-btn{flex-shrink:0;background:linear-gradient(135deg,var(--blue),var(--purple));color:#fff;border:none;border-radius:10px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity .15s,transform .15s,box-shadow .15s;box-shadow:0 4px 14px rgba(91,79,207,.3)}
-.bnc-btn:hover{opacity:.92;transform:translateY(-1px);box-shadow:0 6px 18px rgba(91,79,207,.4)}
+.bnc-btn{flex-shrink:0;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;border:none;border-radius:10px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity .15s,transform .15s,box-shadow .15s;box-shadow:0 4px 14px rgba(26,86,219,.3)}
+.bnc-btn:hover{opacity:.92;transform:translateY(-1px);box-shadow:0 6px 18px rgba(26,86,219,.4)}
 .bb-left .bb-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:3px}
 .bb-left .bb-val{font-size:22px;font-weight:700;letter-spacing:-.02em}
 .bb-left .bb-sub{font-size:12px;color:var(--muted);margin-top:2px}
@@ -102,7 +239,10 @@ html.dark .nav{background:rgba(13,19,26,.92);backdrop-filter:blur(20px);-webkit-
 .date-disp{font-size:16px;font-weight:700;letter-spacing:-.01em}
 .date-row input[type="date"]{border:1px solid var(--border);background:var(--surface-2);border-radius:var(--radius-sm);padding:6px 10px;font-family:inherit;font-size:13px;color:var(--text);outline:none;cursor:pointer;transition:border-color .15s}
 .date-row input[type="date"]:focus{border-color:var(--blue)}
-.entry-block{margin-bottom:10px;border-bottom:1px solid var(--border);padding-bottom:10px}
+.pay-method-row{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap}
+.pay-method-btn{padding:3px 9px;border-radius:99px;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);font-size:11px;font-weight:500;cursor:pointer;transition:all .12s;font-family:inherit}
+.pay-method-btn.active{background:var(--primary);border-color:var(--primary);color:#fff}
+.pay-method-btn:hover:not(.active){border-color:var(--primary);color:var(--primary)}
 .entry-block:last-of-type{border-bottom:none;padding-bottom:0;margin-bottom:0}
 .entry-row{display:grid;grid-template-columns:1fr 130px 32px;gap:8px;align-items:end}
 .field label{display:block;font-size:10.5px;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.07em}
@@ -130,8 +270,8 @@ html.dark .nav{background:rgba(13,19,26,.92);backdrop-filter:blur(20px);-webkit-
 .btns{display:flex;gap:6px}
 .btn{display:inline-flex;align-items:center;gap:5px;padding:8px 18px;border-radius:var(--radius-sm);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border);transition:all .15s;letter-spacing:.01em}
 .btn:active{transform:scale(.97)}
-.btn-primary{background:var(--text);color:var(--surface);border-color:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.15)}
-.btn-primary:hover{opacity:.88}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;border-color:var(--primary);box-shadow:0 2px 10px rgba(26,86,219,.25)}
+.btn-primary:hover{opacity:.9;box-shadow:0 4px 16px rgba(26,86,219,.35)}
 .btn-ghost{background:transparent;color:var(--muted);border-color:var(--border)}
 .btn-ghost:hover{background:var(--surface-2);color:var(--text)}
 .btn-sm{padding:5px 12px;font-size:12px}
@@ -326,8 +466,8 @@ html.dark .field input[type="number"],html.dark .notes-row input[type="text"],ht
 html.dark .field select,html.dark .entry-edit-form select,html.dark .heatmap-year-select{background-color:#1A2130 !important;background-image:url("data:image/svg+xml,%3Csvg width='14' height='9' viewBox='0 0 14 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L7 7.5L13 1.5' stroke='%237A8FA6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;border-color:rgba(38,48,64,.9);box-shadow:0 2px 4px rgba(0,0,0,.2)}
 html.dark .field select:hover,html.dark .entry-edit-form select:hover,html.dark .heatmap-year-select:hover{border-color:rgba(91,155,255,.45);box-shadow:0 4px 12px rgba(0,0,0,.3);background-color:#212C3D !important}
 html.dark .field select:focus,html.dark .field input[type="number"]:focus,html.dark .notes-row input:focus,html.dark .date-row input[type="date"]:focus,html.dark .entry-edit-form select:focus,html.dark .entry-edit-form input:focus,html.dark .modal input:focus,html.dark .add-cat-row input:focus{background-color:#212C3D !important;border-color:rgba(91,155,255,.55);box-shadow:0 0 0 3px rgba(91,155,255,.15),0 4px 12px rgba(0,0,0,.3)}
-html.dark .tab.active{background:#E8EFF8;color:#0B0F17;border-color:#E8EFF8;box-shadow:0 2px 10px rgba(232,239,248,.15)}
-html.dark .btn-primary{background:#E8EFF8;color:#0B0F17;border-color:#E8EFF8}
+html.dark .tab.active{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;border-color:transparent;box-shadow:0 2px 14px rgba(77,142,255,.3)}
+html.dark .btn-primary{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;border-color:var(--primary)}
 html.dark .btn-ghost{background:transparent;color:var(--muted);border-color:rgba(38,48,64,.9)}
 html.dark .menu-sep,html.dark .entry-item,html.dark .entry-block,html.dark .date-row,html.dark .day-card.expanded .day-header,html.dark .hm-total-row{border-color:rgba(38,48,64,.8)}
 html.dark .section-title,html.dark .nav-sub,html.dark .stat-sub,html.dark .prog-meta,html.dark .cat-name,html.dark .week-bar-label,html.dark .week-bar-date,html.dark .mc-budget,html.dark .mc-sub,html.dark .ins-lbl,html.dark .hm-legend span,html.dark .hm-day-sub,html.dark .modal p,html.dark .modal-hint{color:var(--muted)}
@@ -417,12 +557,183 @@ html.dark .hm-no-data{background:var(--surface-3);opacity:.9}
 </style>
 </head>
 <body>
+<!-- Sidebar toggle button -->
+<button class="sb-toggle open" id="sbToggle" title="Toggle sidebar">
+  <svg width="10" height="14" viewBox="0 0 10 14" fill="none"><path d="M2 2L8 7L2 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+
+<!-- Overlay -->
+<div class="sb-overlay" id="sbOverlay"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-header">
+    <div class="sb-header-brand">
+      <div class="sb-header-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="7" width="20" height="14" rx="2"/>
+          <path d="M16 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" fill="white" stroke="none"/>
+          <path d="M2 10h20M6 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2"/>
+        </svg>
+      </div>
+      <div>
+        <div class="sb-header-title">Finance Tools</div>
+        <div class="sb-header-sub">Festival · Payments · EMI</div>
+      </div>
+    </div>
+    <button class="sb-close" id="sbClose">✕</button>
+  </div>
+
+  <div class="sb-body">
+
+    <!-- ── SECTION 1: FESTIVAL BUDGET ── -->
+    <div class="sb-section" id="sbFestSection">
+      <div class="sb-section-header" onclick="sbToggleSection('sbFestSection')">
+        <div class="sb-section-title"><span class="sb-section-icon">🪔</span> Festival Budget Mode</div>
+        <span class="sb-chevron">▶</span>
+      </div>
+      <div class="sb-section-body">
+        <div class="sb-toggle-row">
+          <span class="sb-toggle-label">Activate Festival Mode</span>
+          <label class="sw-wrap"><input type="checkbox" id="festModeToggle"><span class="sw-slider"></span></label>
+        </div>
+        <div id="festModeBody" style="display:none">
+          <div class="sb-row">
+            <span class="sb-label">Festival</span>
+            <select class="sb-select" id="festSelect">
+              <option value="diwali">🪔 Diwali</option>
+              <option value="holi">🎨 Holi</option>
+              <option value="dussehra">🏹 Dussehra</option>
+              <option value="navratri">💃 Navratri</option>
+              <option value="eid">🌙 Eid</option>
+              <option value="christmas">🎄 Christmas</option>
+              <option value="wedding_self">💍 Wedding (Self)</option>
+              <option value="wedding_attend">🎊 Wedding (Attending)</option>
+              <option value="other">✨ Other</option>
+            </select>
+          </div>
+          <div class="sb-row">
+            <span class="sb-label">Extra Festival Budget (₹)</span>
+            <input type="number" class="sb-input" id="festBudget" placeholder="e.g. 15000" min="0">
+          </div>
+          <div class="sb-2col sb-row">
+            <div>
+              <span class="sb-label">Start Date</span>
+              <input type="date" class="sb-input" id="festStart">
+            </div>
+            <div>
+              <span class="sb-label">End Date</span>
+              <input type="date" class="sb-input" id="festEnd">
+            </div>
+          </div>
+          <div id="festBudgetProgress" style="display:none">
+            <div style="display:flex;justify-content:space-between;font-size:11px;color:#94A3B8;margin-bottom:4px">
+              <span id="festSpentLabel">₹0 spent</span>
+              <span id="festRemainingLabel">₹0 remaining</span>
+            </div>
+            <div class="sb-prog-bg"><div class="sb-prog-fill" id="festProgFill" style="width:0%"></div></div>
+          </div>
+          <span class="sb-label">Sub-categories</span>
+          <div class="sb-chips" id="festChips">
+            <span class="sb-chip" data-cat="gifts">🎁 Gifts</span>
+            <span class="sb-chip" data-cat="sweets">🍬 Sweets</span>
+            <span class="sb-chip" data-cat="clothes">👗 Clothes</span>
+            <span class="sb-chip" data-cat="puja">🪷 Puja Items</span>
+            <span class="sb-chip" data-cat="travel">✈️ Travel</span>
+            <span class="sb-chip" data-cat="decor">🎆 Decoration</span>
+            <span class="sb-chip" data-cat="venue">🏛️ Venue</span>
+            <span class="sb-chip" data-cat="catering">🍽️ Catering</span>
+          </div>
+          <div id="festChipInputs"></div>
+          <div class="sb-divider"></div>
+          <div class="sb-stat-row">
+            <span class="sb-stat-lbl">Total Festival Spend</span>
+            <span class="sb-stat-val orange" id="festTotalSpend">₹0</span>
+          </div>
+          <div class="sb-stat-row">
+            <span class="sb-stat-lbl">Budget Remaining</span>
+            <span class="sb-stat-val green" id="festBudgetLeft">₹0</span>
+          </div>
+          <button class="sb-solid-btn" style="width:100%;margin-top:10px" onclick="saveFestData()">Save Festival Data</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 2: CASH vs DIGITAL ── -->
+    <div class="sb-section" id="sbPaySection">
+      <div class="sb-section-header" onclick="sbToggleSection('sbPaySection')">
+        <div class="sb-section-title"><span class="sb-section-icon">💵</span> Cash vs Digital Split</div>
+        <span class="sb-chevron">▶</span>
+      </div>
+      <div class="sb-section-body">
+        <div class="sb-toggle-row" style="margin-bottom:10px">
+          <span class="sb-toggle-label" style="font-size:12px">Show all time</span>
+          <label class="sw-wrap"><input type="checkbox" id="payAllTime" onchange="renderPaySplit()"><span class="sw-slider"></span></label>
+        </div>
+        <div class="sb-donut-wrap">
+          <canvas id="payDonut" width="80" height="80"></canvas>
+          <div class="sb-legend" id="payLegend"></div>
+        </div>
+        <div id="payStats"></div>
+        <div class="sb-divider"></div>
+        <div id="upiBreakdown"></div>
+        <div class="sb-divider"></div>
+        <div id="payInsight" style="font-size:12px;color:#94A3B8;text-align:center;padding:4px 0"></div>
+        <div class="sb-divider"></div>
+        <span class="sb-label" style="margin-top:0">Tag payment method on new expenses</span>
+        <div class="sb-chips" id="payMethodChips">
+          <span class="sb-chip active" data-method="upi">📱 UPI</span>
+          <span class="sb-chip" data-method="cash">💵 Cash</span>
+          <span class="sb-chip" data-method="card">💳 Card</span>
+          <span class="sb-chip" data-method="nb">🏦 Net Banking</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 3: EMI TRACKER ── -->
+    <div class="sb-section" id="sbEmiSection">
+      <div class="sb-section-header" onclick="sbToggleSection('sbEmiSection')">
+        <div class="sb-section-title"><span class="sb-section-icon">📅</span> EMI Tracker</div>
+        <span class="sb-chevron">▶</span>
+      </div>
+      <div class="sb-section-body">
+        <div id="emiList"></div>
+        <button class="sb-add-btn" onclick="sbShowEmiForm()">＋ Add New EMI</button>
+        <div id="emiForm" style="display:none;background:#1E293B;border-radius:10px;padding:12px;margin-top:10px;border:1px solid #334155">
+          <div class="sb-row"><span class="sb-label">EMI Name</span><input type="text" class="sb-input" id="emiName" placeholder="e.g. Phone EMI"></div>
+          <div class="sb-2col sb-row">
+            <div><span class="sb-label">Total Amount (₹)</span><input type="number" class="sb-input" id="emiTotal" placeholder="50000"></div>
+            <div><span class="sb-label">EMI / Month (₹)</span><input type="number" class="sb-input" id="emiMonthly" placeholder="2500"></div>
+          </div>
+          <div class="sb-2col sb-row">
+            <div><span class="sb-label">Start Date</span><input type="date" class="sb-input" id="emiStart"></div>
+            <div><span class="sb-label">Duration (months)</span><input type="number" class="sb-input" id="emiDuration" placeholder="24"></div>
+          </div>
+          <div class="sb-row"><span class="sb-label">Bank / Lender</span><input type="text" class="sb-input" id="emiLender" placeholder="HDFC Bank"></div>
+          <div style="display:flex;gap:8px;margin-top:4px">
+            <button class="sb-solid-btn" style="flex:1" onclick="saveEmi()">Save EMI</button>
+            <button class="sb-ghost-btn" onclick="document.getElementById('emiForm').style.display='none'">Cancel</button>
+          </div>
+        </div>
+        <div class="sb-divider"></div>
+        <div class="sb-footer-text" id="emiSummary">Total EMI burden: <strong>₹0</strong>/month</div>
+      </div>
+    </div>
+
+  </div><!-- /sb-body -->
+</aside>
+
+<!-- App wrapper (shifts right when sidebar opens on desktop) -->
+<div class="app-wrap" id="appWrap">
 <div id="navArea"></div>
 <div class="page">
   <div id="tabsArea"></div>
   <div id="mainArea"></div>
+  <div id="modalArea"></div>
 </div>
-<div id="modalArea"></div>
+</div>
+
+</div>
 <div id="toast"></div>
 
 <script>
@@ -446,7 +757,7 @@ const DEFAULT_CATS = {
 /* ── STATE ───────────────────────────────────────── */
 let entries = {}, budgets = {}, customCats = {...DEFAULT_CATS}, recurring = [];
 let viewYear, viewMonth, viewWeekStart, activeTab = 'month';
-let formRows = [{ cat:'lunch', amount:'', notes:'', rec:false }];
+let formRows = [{ cat:'lunch', amount:'', notes:'', rec:false, payMethod:'upi' }];
 let formDate = '';
 let heatmapYear;
 let compareMonthKey = '';
@@ -791,6 +1102,17 @@ function buildNav(){
     : `<button class="nav-btn" onclick="window.location.href='auth.html'" style="font-size:12px;font-weight:600;width:auto;padding:0 12px">Sign In</button>`;
   const themeBtn = `<button class="theme-toggle" id="themeToggleBtn" title="${darkMode?'Switch to light mode':'Switch to dark mode'}">${darkMode?'☀️':'🌙'}</button>`;
   const menuBtn = `<div class="menu-wrap"><button class="nav-btn" id="menuBtn" title="More options" style="font-size:18px;letter-spacing:1px">⋮</button></div>`;
+  const logoHtml=`<a class="nav-logo-wrap" href="index.html" title="SpendWise">
+    <div class="nav-logo-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 18L8 14L12 16L20 8M20 8V13M20 8H15" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="8" cy="14" r="1.5" fill="white"/>
+        <circle cx="12" cy="16" r="1.5" fill="white"/>
+        <circle cx="20" cy="8" r="1.5" fill="white"/>
+      </svg>
+    </div>
+    <span class="nav-logo-name">Spend<span>Wise</span></span>
+  </a>`;
   if(activeTab==='week'){
     const dates=getWeekDates(viewWeekStart);
     const [sy,sm,sd]=dates[0].split('-');
@@ -802,6 +1124,7 @@ function buildNav(){
     
     return `<div class="nav">
       <div class="nav-side left">
+        ${logoHtml}
         <div class="nav-arrows">
           <button class="nav-btn" id="prevWeekBtn">‹</button>
         </div>
@@ -824,6 +1147,7 @@ function buildNav(){
   const ic=(viewYear===nowYear()&&viewMonth===nowMonth());
   return `<div class="nav">
     <div class="nav-side left">
+      ${logoHtml}
       <div class="nav-arrows">
         <button class="nav-btn" id="prevYearBtn">«</button>
         <button class="nav-btn" id="prevMonthBtn">‹</button>
@@ -972,9 +1296,6 @@ function buildMonthView(){
       <div class="dashboard-secondary">
         <div class="sticky-desktop">
           ${comparisonHtml}
-          <div style="padding:10px 4px 4px">
-            <p id="cmpInsightText" style="font-size:13px;color:var(--muted);line-height:1.7;text-align:center;transition:opacity .3s ease;min-height:44px"></p>
-          </div>
           ${recurringHtml}
         </div>
       </div>
@@ -1015,7 +1336,7 @@ function buildMonthComparison(y,m){
   const maxVal   = Math.max(...curData, ...cmpData, 1);
 
   // SVG dimensions
-  const W = 260, H = 110, PL = 38, PR = 8, PT = 8, PB = 22;
+  const W = 260, H = 180, PL = 38, PR = 8, PT = 8, PB = 22;
   const gW = W - PL - PR, gH = H - PT - PB;
 
   function toX(i, total) { return PL + (i / (total - 1 || 1)) * gW; }
@@ -1250,6 +1571,8 @@ function buildForm(){
 
 function buildFormBlock(r,i,showLabel){
   const QUICK_AMTS=[50,100,150,200,500];
+  const methods=[{id:'upi',label:'📱 UPI'},{id:'cash',label:'💵 Cash'},{id:'card',label:'💳 Card'},{id:'nb',label:'🏦 NB'}];
+  const pm=r.payMethod||'upi';
   return `<div class="entry-block" data-idx="${i}">
     <div class="entry-row">
       <div class="field">
@@ -1262,9 +1585,15 @@ function buildFormBlock(r,i,showLabel){
       </div>
       <button class="remove-row-btn" data-idx="${i}"${formRows.length===1?' style="visibility:hidden"':''}>✕</button>
     </div>
-    <div class="quick-row">
-      ${QUICK_AMTS.map(v=>`<button class="qa-btn" data-idx="${i}" data-val="${v}">₹${v}</button>`).join('')}
-      <div class="qa-sep"></div>
+    <div style="display:flex;align-items:center;gap:6px;margin-top:6px">
+      <div class="pay-method-row" style="margin-top:0;flex:0 0 auto">
+        ${methods.map(m=>`<button type="button" class="pay-method-btn${pm===m.id?' active':''}" data-idx="${i}" data-method="${m.id}">${m.label}</button>`).join('')}
+      </div>
+      <div style="flex:1;display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;padding-right:40px">
+        ${QUICK_AMTS.map(v=>`<button class="qa-btn" data-idx="${i}" data-val="${v}">₹${v}</button>`).join('')}
+      </div>
+    </div>
+    <div class="quick-row" style="margin-top:6px">
       <label class="rec-label"><input type="checkbox" class="row-rec-chk" data-idx="${i}"${r.rec?' checked':''}> Recurring</label>
     </div>
     <div class="notes-row">
@@ -2372,7 +2701,7 @@ function downloadFile(content,filename,type){
 function closeModal(){ document.getElementById('modalArea').innerHTML=''; }
 
 /* ── EVENTS ──────────────────────────────────────── */
-function resetNav(){ formDate=''; formRows=[{cat:Object.keys(customCats)[0]||'lunch',amount:'',notes:'',rec:false}]; }
+function resetNav(){ formDate=''; formRows=[{cat:Object.keys(customCats)[0]||'lunch',amount:'',notes:'',rec:false,payMethod:'upi'}]; }
 
 function bindEvents(){
   const g=id=>document.getElementById(id);
@@ -2411,33 +2740,6 @@ function bindEvents(){
     g('budgetNudgeBtn')&&g('budgetNudgeBtn').addEventListener('click',()=>g('setBudgetBtn')&&g('setBudgetBtn').click());
   }
 
-  // Comparison insight text (below multi-month comparison card)
-  if(g('cmpInsightText')){
-    const el=g('cmpInsightText');
-    const curr=monthSpent(viewYear,viewMonth);
-    const {y:cy,m:cm}=parseMonthKey(compareMonthKey||monthKey(viewYear,viewMonth));
-    const prev=monthSpent(cy,cm);
-    const diff=curr-prev;
-    const pct=prev>0?Math.abs((diff/prev)*100).toFixed(1):null;
-    const lines=[
-      curr>prev&&pct?`Spending is up ${pct}% compared to the previous period. Keep an eye on your budget.`:
-      curr<prev&&pct?`Spending is down ${pct}% vs last period — you're doing great!`:
-      'Spending is on par with the comparison month. Stay consistent.',
-      curr>0?`You've spent ${fmt(curr)} this month so far. ${prev>0?`That's ${curr>prev?fmt(curr-prev)+' more':'₹'+Math.round(Math.abs(curr-prev)).toLocaleString('en-IN')+' less'} than last period.`:''}`:
-      'No expenses logged yet this month. Start tracking to see insights.',
-      prev>0?`The comparison month total was ${fmt(prev)}. Use this as your benchmark for this month.`:
-      'No data available for the comparison month yet.',
-    ];
-    let idx=0;
-    el.textContent=lines[0];
-    setTimeout(()=>{
-      const t=setInterval(()=>{
-        if(!g('cmpInsightText')){clearInterval(t);return;}
-        g('cmpInsightText').style.opacity='0';
-        setTimeout(()=>{idx=(idx+1)%lines.length;const e=g('cmpInsightText');if(e){e.textContent=lines[idx];e.style.opacity='';}},300);
-      },3500);
-    },1750);
-  }
   if(g('catInsightBox')){
     // Build insights from current month data
     const t=monthCatTotals(viewYear,viewMonth);
@@ -2648,6 +2950,7 @@ function bindEvents(){
       const amt=block.querySelector('.row-amt'); if(amt) formRows[i].amount=amt.value;
       const note=block.querySelector('.row-note'); if(note) formRows[i].notes=note.value;
       const rec=block.querySelector('.row-rec-chk'); if(rec) formRows[i].rec=rec.checked;
+      const pm=block.querySelector('.pay-method-btn.active'); if(pm) formRows[i].payMethod=pm.dataset.method;
     });
     if(g('entryDate')) formDate=g('entryDate').value;
     updateLive();
@@ -2655,6 +2958,12 @@ function bindEvents(){
   document.querySelectorAll('.row-cat').forEach(el=>el.addEventListener('change',syncRows));
   document.querySelectorAll('.row-amt').forEach(el=>el.addEventListener('input',syncRows));
   document.querySelectorAll('.row-note').forEach(el=>el.addEventListener('input',syncRows));
+  document.querySelectorAll('.pay-method-btn').forEach(btn=>btn.addEventListener('click',()=>{
+    const i=+btn.dataset.idx;
+    document.querySelectorAll(`.pay-method-btn[data-idx="${i}"]`).forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    formRows[i].payMethod=btn.dataset.method;
+  }));
 
   document.querySelectorAll('.qa-btn').forEach(el=>{
     el.addEventListener('click',()=>{
@@ -2696,7 +3005,7 @@ function bindEvents(){
     if(!valid.length){showToast('Enter at least one amount');return;}
     if(!entries[iso]) entries[iso]=[];
     valid.forEach(r=>{
-      const entry={id:uid(),cat:r.cat,amount:parseFloat(r.amount)};
+      const entry={id:uid(),cat:r.cat,amount:parseFloat(r.amount),payMethod:r.payMethod||'upi'};
       if(r.notes&&r.notes.trim()) entry.notes=r.notes.trim();
       entries[iso].push(entry);
       if(r.rec){
@@ -2705,12 +3014,13 @@ function bindEvents(){
       }
     });
     saveData();
-    formRows=[{cat:Object.keys(customCats)[0]||'lunch',amount:'',notes:'',rec:false}];
+    formRows=[{cat:Object.keys(customCats)[0]||'lunch',amount:'',notes:'',rec:false,payMethod:'upi'}];
     render();showToast(`${valid.length} item${valid.length!==1?'s':''} saved ✓`);
+    renderPaySplit();
   });
 
   g('clearFormBtn')&&g('clearFormBtn').addEventListener('click',()=>{
-    formRows=[{cat:Object.keys(customCats)[0]||'lunch',amount:'',notes:'',rec:false}];
+    formRows=[{cat:Object.keys(customCats)[0]||'lunch',amount:'',notes:'',rec:false,payMethod:'upi'}];
     rebuildFormRows();
   });
 
@@ -2868,6 +3178,7 @@ function rebuildFormRows(){
       const amt=block.querySelector('.row-amt'); if(amt) formRows[i].amount=amt.value;
       const note=block.querySelector('.row-note'); if(note) formRows[i].notes=note.value;
       const rec=block.querySelector('.row-rec-chk'); if(rec) formRows[i].rec=rec.checked;
+      const pm=block.querySelector('.pay-method-btn.active'); if(pm) formRows[i].payMethod=pm.dataset.method;
     });
     if(document.getElementById('entryDate')) formDate=document.getElementById('entryDate').value;
     updateLive();
@@ -2875,6 +3186,12 @@ function rebuildFormRows(){
   card.querySelectorAll('.row-cat').forEach(el=>el.addEventListener('change',syncRows));
   card.querySelectorAll('.row-amt').forEach(el=>el.addEventListener('input',syncRows));
   card.querySelectorAll('.row-note').forEach(el=>el.addEventListener('input',syncRows));
+  card.querySelectorAll('.pay-method-btn').forEach(btn=>btn.addEventListener('click',()=>{
+    const i=+btn.dataset.idx;
+    card.querySelectorAll(`.pay-method-btn[data-idx="${i}"]`).forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    formRows[i].payMethod=btn.dataset.method;
+  }));
   card.querySelectorAll('.qa-btn').forEach(el=>{
     el.addEventListener('click',()=>{
       const i=+el.dataset.idx;const v=parseFloat(el.dataset.val)||0;
@@ -2947,6 +3264,210 @@ setInterval(()=>{
   const n=new Date();
   if(n.getHours()===0&&n.getMinutes()===0){viewYear=nowYear();viewMonth=nowMonth();viewWeekStart=getWeekStart(today());render();}
 },60000);
+
+/* ══════════════════════════════════════════════════
+   SIDEBAR — Indian Features
+══════════════════════════════════════════════════ */
+// ── State ──
+let sbData = JSON.parse(localStorage.getItem('sb_data')||'{}');
+// sbData: { fest:{active,festival,budget,start,end,spends:{cat:amt}}, emis:[...], payMethod:'upi', upiApp:'gpay', payTags:{isoDate:{method,upiApp}} }
+if(!sbData.fest) sbData.fest={active:false,festival:'diwali',budget:0,start:'',end:'',spends:{}};
+if(!sbData.emis) sbData.emis=[];
+if(!sbData.payMethod) sbData.payMethod='upi';
+if(!sbData.upiApp) sbData.upiApp='gpay';
+if(!sbData.payTags) sbData.payTags={};
+
+function saveSbData(){ localStorage.setItem('sb_data',JSON.stringify(sbData)); }
+
+// ── Toggle sidebar ──
+function sbOpen(){
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sbToggle').classList.add('open');
+  // Arrow points LEFT when open (← = collapse)
+  document.getElementById('sbToggle').querySelector('svg').style.transform='rotate(180deg)';
+  document.getElementById('appWrap').classList.add('sb-open');
+  if(window.innerWidth<900) document.getElementById('sbOverlay').classList.add('show');
+}
+function sbClose(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sbOverlay').classList.remove('show');
+  document.getElementById('sbToggle').classList.remove('open');
+  // Arrow points RIGHT when closed (→ = expand)
+  document.getElementById('sbToggle').querySelector('svg').style.transform='rotate(0deg)';
+  document.getElementById('appWrap').classList.remove('sb-open');
+}
+document.getElementById('sbToggle').addEventListener('click',()=>{ document.getElementById('sidebar').classList.contains('open')?sbClose():sbOpen(); });
+document.getElementById('sbClose').addEventListener('click',sbClose);
+document.getElementById('sbOverlay').addEventListener('click',sbClose);
+// Open by default on desktop
+if(window.innerWidth>=900){ sbOpen(); document.getElementById('sbToggle').querySelector('svg').style.transform='rotate(180deg)'; }
+// ── Accordion ──
+function sbToggleSection(id){
+  const s=document.getElementById(id);
+  s.classList.toggle('open');
+  // Re-render pay split when that section opens (canvas needs to be visible)
+  if(id==='sbPaySection'&&s.classList.contains('open')) renderPaySplit();
+}
+
+// ── FESTIVAL MODE ──
+const festToggle=document.getElementById('festModeToggle');
+festToggle.checked=sbData.fest.active;
+document.getElementById('festModeBody').style.display=sbData.fest.active?'block':'none';
+festToggle.addEventListener('change',()=>{ sbData.fest.active=festToggle.checked; saveSbData(); document.getElementById('festModeBody').style.display=festToggle.checked?'block':'none'; updateFestUI(); });
+document.getElementById('festSelect').value=sbData.fest.festival||'diwali';
+document.getElementById('festBudget').value=sbData.fest.budget||'';
+document.getElementById('festStart').value=sbData.fest.start||'';
+document.getElementById('festEnd').value=sbData.fest.end||'';
+['festSelect','festBudget','festStart','festEnd'].forEach(id=>{ document.getElementById(id).addEventListener('change',()=>{ sbData.fest.festival=document.getElementById('festSelect').value; sbData.fest.budget=parseFloat(document.getElementById('festBudget').value)||0; sbData.fest.start=document.getElementById('festStart').value; sbData.fest.end=document.getElementById('festEnd').value; saveSbData(); updateFestUI(); }); });
+
+// Festival chips
+document.querySelectorAll('#festChips .sb-chip').forEach(chip=>{
+  const cat=chip.dataset.cat;
+  if(sbData.fest.spends[cat]) chip.classList.add('active');
+  chip.addEventListener('click',()=>{
+    chip.classList.toggle('active');
+    const inputWrap=document.getElementById('festInput_'+cat);
+    if(chip.classList.contains('active')){
+      if(!inputWrap){
+        const d=document.createElement('div');
+        d.className='sb-chip-amt show'; d.id='festInput_'+cat;
+        d.innerHTML=`<span>${chip.textContent}</span><span style="color:#475569">₹</span><input type="number" placeholder="0" value="${sbData.fest.spends[cat]||''}" min="0" oninput="sbData.fest.spends['${cat}']=parseFloat(this.value)||0;saveSbData();updateFestUI()">`;
+        document.getElementById('festChipInputs').appendChild(d);
+      } else { inputWrap.classList.add('show'); }
+    } else {
+      delete sbData.fest.spends[cat];
+      if(inputWrap) inputWrap.classList.remove('show');
+      saveSbData(); updateFestUI();
+    }
+  });
+});
+
+function updateFestUI(){
+  const budget=sbData.fest.budget||0;
+  const spent=Object.values(sbData.fest.spends||{}).reduce((a,b)=>a+b,0);
+  const pct=budget>0?Math.min(100,(spent/budget)*100):0;
+  const prog=document.getElementById('festBudgetProgress');
+  if(budget>0){ prog.style.display='block'; document.getElementById('festProgFill').style.width=pct+'%'; document.getElementById('festSpentLabel').textContent='₹'+Math.round(spent).toLocaleString('en-IN')+' spent'; document.getElementById('festRemainingLabel').textContent='₹'+Math.round(Math.max(0,budget-spent)).toLocaleString('en-IN')+' remaining'; }
+  else { prog.style.display='none'; }
+  document.getElementById('festTotalSpend').textContent='₹'+Math.round(spent).toLocaleString('en-IN');
+  document.getElementById('festBudgetLeft').textContent='₹'+Math.round(Math.max(0,budget-spent)).toLocaleString('en-IN');
+}
+function saveFestData(){ saveSbData(); showToast('Festival data saved ✓'); updateFestUI(); }
+updateFestUI();
+
+// ── PAYMENT SPLIT ──
+function renderPaySplit(){
+  const allTime=document.getElementById('payAllTime')?.checked||false;
+  const prefix=monthKey(viewYear,viewMonth); // always use current month unless all-time toggled
+  const counts={cash:0,upi:0,card:0,nb:0};
+  const amounts={cash:0,upi:0,card:0,nb:0};
+  const upiApps={gpay:0,phonepe:0,paytm:0,other:0};
+
+  Object.entries(entries).forEach(([date,items])=>{
+    if(!allTime&&!date.startsWith(prefix)) return;
+    (items||[]).forEach(entry=>{
+      const m=entry.payMethod||'upi';
+      counts[m]=(counts[m]||0)+1;
+      amounts[m]=(amounts[m]||0)+entry.amount;
+      // UPI app from sbData.payTags (legacy) or default
+      if(m==='upi'){
+        const tag=sbData.payTags?.[date];
+        const app=tag?.upiApp||'other';
+        upiApps[app]=(upiApps[app]||0)+entry.amount;
+      }
+    });
+  });
+  const total=Object.values(counts).reduce((a,b)=>a+b,0)||1;
+  const totalAmt=Object.values(amounts).reduce((a,b)=>a+b,0)||1;
+  const digital=counts.upi+counts.card+counts.nb;
+  const digitalPct=Math.round((digital/total)*100);
+  // Donut
+  const canvas=document.getElementById('payDonut');
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,80,80);
+  const colors={cash:'#F97316',upi:'#3B82F6',card:'#8B5CF6',nb:'#10B981'};
+  let start=0;
+  Object.entries(counts).forEach(([k,v])=>{ const slice=(v/total)*Math.PI*2; ctx.beginPath(); ctx.moveTo(40,40); ctx.arc(40,40,36,start,start+slice); ctx.closePath(); ctx.fillStyle=colors[k]; ctx.fill(); start+=slice; });
+  ctx.beginPath(); ctx.arc(40,40,22,0,Math.PI*2); ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--surface').trim()||'#fff'; ctx.fill();
+  ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--text').trim()||'#000'; ctx.font='bold 11px Inter,sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(digitalPct+'%',40,40);
+  // Legend
+  const labels={cash:'Cash',upi:'UPI',card:'Card',nb:'Net Banking'};
+  document.getElementById('payLegend').innerHTML=Object.entries(counts).map(([k,v])=>`<div class="sb-legend-item"><div class="sb-legend-dot" style="background:${colors[k]}"></div>${labels[k]}: <strong style="color:#E2E8F0;margin-left:2px">${Math.round((v/total)*100)}%</strong></div>`).join('');
+  // Stats
+  document.getElementById('payStats').innerHTML=`<div class="sb-stat-row"><span class="sb-stat-lbl">Cash spent</span><span class="sb-stat-val orange">₹${Math.round(amounts.cash).toLocaleString('en-IN')}</span></div><div class="sb-stat-row"><span class="sb-stat-lbl">Digital spent</span><span class="sb-stat-val blue">₹${Math.round(amounts.upi+amounts.card+amounts.nb).toLocaleString('en-IN')}</span></div>`;
+  document.getElementById('payInsight').textContent=`You prefer digital — ${digitalPct}% of transactions`;
+}
+// Payment method chips
+document.querySelectorAll('#payMethodChips .sb-chip').forEach(c=>{ c.addEventListener('click',()=>{ document.querySelectorAll('#payMethodChips .sb-chip').forEach(x=>x.classList.remove('active')); c.classList.add('active'); sbData.payMethod=c.dataset.method; saveSbData(); document.getElementById('upiAppRow').style.display=c.dataset.method==='upi'?'flex':'none'; }); });
+document.querySelectorAll('#upiAppRow .sb-chip').forEach(c=>{ c.addEventListener('click',()=>{ document.querySelectorAll('#upiAppRow .sb-chip').forEach(x=>x.classList.remove('active')); c.classList.add('active'); sbData.upiApp=c.dataset.upi; saveSbData(); }); });
+// Set active chips from saved state
+document.querySelectorAll('#payMethodChips .sb-chip').forEach(c=>c.classList.toggle('active',c.dataset.method===sbData.payMethod));
+document.querySelectorAll('#upiAppRow .sb-chip').forEach(c=>c.classList.toggle('active',c.dataset.upi===sbData.upiApp));
+document.getElementById('upiAppRow').style.display=sbData.payMethod==='upi'?'flex':'none';
+// Tag payment on save — now handled per-entry in formRows
+renderPaySplit();
+
+// ── EMI TRACKER ──
+function sbShowEmiForm(){ document.getElementById('emiForm').style.display='block'; document.getElementById('emiName').focus(); }
+function saveEmi(){
+  const name=document.getElementById('emiName').value.trim();
+  const total=parseFloat(document.getElementById('emiTotal').value)||0;
+  const monthly=parseFloat(document.getElementById('emiMonthly').value)||0;
+  const start=document.getElementById('emiStart').value;
+  const duration=parseInt(document.getElementById('emiDuration').value)||0;
+  const lender=document.getElementById('emiLender').value.trim();
+  if(!name||!total||!monthly||!start||!duration){ showToast('Fill all EMI fields'); return; }
+  sbData.emis.push({id:Math.random().toString(36).slice(2),name,total,monthly,start,duration,lender,paid:[]});
+  saveSbData(); renderEmis();
+  document.getElementById('emiForm').style.display='none';
+  ['emiName','emiTotal','emiMonthly','emiStart','emiDuration','emiLender'].forEach(id=>document.getElementById(id).value='');
+  showToast('EMI added ✓');
+}
+function renderEmis(){
+  const todayISO=today();
+  const active=sbData.emis.filter(e=>{ const paid=e.paid?.length||0; return paid<e.duration; });
+  const closed=sbData.emis.filter(e=>{ const paid=e.paid?.length||0; return paid>=e.duration; });
+  let html='';
+  active.forEach(emi=>{
+    const paid=emi.paid?.length||0;
+    const pct=Math.round((paid/emi.duration)*100);
+    const outstanding=Math.max(0,emi.total-(paid*emi.monthly));
+    // Next due date
+    const startD=new Date(emi.start+'T00:00:00');
+    startD.setMonth(startD.getMonth()+paid);
+    const dueISO=`${startD.getFullYear()}-${String(startD.getMonth()+1).padStart(2,'0')}-${String(startD.getDate()).padStart(2,'0')}`;
+    const daysUntil=Math.round((new Date(dueISO)-new Date(todayISO))/(86400000));
+    const dueClass=daysUntil<=0?'urgent':daysUntil<=3?'soon':'';
+    html+=`<div class="sb-emi-item">
+      <div class="sb-emi-header">
+        <div><div class="sb-emi-name">${emi.name}</div><div class="sb-emi-lender">${emi.lender||'—'}</div></div>
+        <div style="text-align:right"><div class="sb-emi-amt">₹${emi.monthly.toLocaleString('en-IN')}/mo</div><button onclick="deleteEmi('${emi.id}')" style="background:none;border:none;color:#475569;cursor:pointer;font-size:11px;margin-top:2px">✕ Remove</button></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:#64748B;margin-bottom:4px"><span>${paid} of ${emi.duration} months paid</span><span>₹${Math.round(outstanding).toLocaleString('en-IN')} left</span></div>
+      <div class="sb-prog-bg"><div class="sb-prog-fill green" style="width:${pct}%"></div></div>
+      <div class="sb-emi-due ${dueClass}" style="margin-top:6px">Next due: ${dueISO}${daysUntil<=0?' (Overdue!)':daysUntil<=3?' (Due soon!)':''}</div>
+      <label style="display:flex;align-items:center;gap:6px;margin-top:8px;font-size:12px;color:#94A3B8;cursor:pointer">
+        <input type="checkbox" onchange="markEmiPaid('${emi.id}',this.checked)" style="accent-color:#F97316"> Mark this month as paid
+      </label>
+    </div>`;
+  });
+  if(!active.length) html='<div class="sb-info">No active EMIs. Add one below.</div>';
+  if(closed.length) html+=`<div style="font-size:11px;font-weight:600;color:#475569;margin:8px 0 4px;text-transform:uppercase;letter-spacing:.06em">✓ Closed (${closed.length})</div>`+closed.map(e=>`<div style="background:#1E293B;border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:12px;color:#475569">${e.name} — Completed</div>`).join('');
+  document.getElementById('emiList').innerHTML=html;
+  const totalBurden=active.reduce((s,e)=>s+e.monthly,0);
+  document.getElementById('emiSummary').innerHTML=`Total EMI burden: <strong>₹${totalBurden.toLocaleString('en-IN')}</strong>/month`;
+}
+function markEmiPaid(id,checked){
+  const emi=sbData.emis.find(e=>e.id===id);
+  if(!emi) return;
+  const mo=monthKey(viewYear,viewMonth);
+  if(checked){ if(!emi.paid.includes(mo)) emi.paid.push(mo); }
+  else { emi.paid=emi.paid.filter(m=>m!==mo); }
+  saveSbData(); renderEmis();
+}
+function deleteEmi(id){ customConfirm('Remove this EMI?',()=>{ sbData.emis=sbData.emis.filter(e=>e.id!==id); saveSbData(); renderEmis(); },null); }
+renderEmis();
+
 </script>
 </body>
 </html>
