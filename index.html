@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SpendWise</title>
+<title>Budgetra — Expense Tracker</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%231A56DB'/%3E%3Cstop offset='100%25' stop-color='%235B4FCF'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M5 23L10 17L15 20L27 10M27 10V16M27 10H21' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='10' cy='17' r='2' fill='white'/%3E%3Ccircle cx='15' cy='20' r='2' fill='white'/%3E%3Ccircle cx='27' cy='10' r='2' fill='white'/%3E%3C/svg%3E">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  /* SpendWise Light Theme — Blue/Purple primary, cool grey neutrals */
+  /* Budgetra Light Theme — Blue/Purple primary, cool grey neutrals */
   --bg:#F4F6FB;
   --surface:#FFFFFF;
   --surface-2:#F0F3FA;
@@ -37,7 +37,7 @@
   --shadow-md:0 4px 16px rgba(13,21,38,.1),0 1px 4px rgba(13,21,38,.05);
 }
 html.dark{
-  /* SpendWise Dark Theme — Deep navy, blue glow */
+  /* Budgetra Dark Theme — Deep navy, blue glow */
   --bg:#080D18;
   --surface:#0F1624;
   --surface-2:#162030;
@@ -720,6 +720,48 @@ html.dark .hm-no-data{background:var(--surface-3);opacity:.9}
       </div>
     </div>
 
+    <!-- ── SECTION 5: BUDGETS, ALERTS & SAVINGS ── -->
+    <div class="sb-section" id="sbBudgetSection">
+      <div class="sb-section-header" onclick="sbToggleSection('sbBudgetSection')">
+        <div class="sb-section-title"><span class="sb-section-icon">🎯</span> Budgets &amp; Savings</div>
+        <span class="sb-chevron">▶</span>
+      </div>
+      <div class="sb-section-body">
+
+        <!-- Category-wise Budget Limits -->
+        <div style="font-size:11px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">📊 Category Budget Limits</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:10px">Set monthly spend limits per category. Get alerted when you're close.</div>
+        <div id="catBudgetList"></div>
+
+        <div class="sb-divider"></div>
+
+        <!-- Budget Alerts -->
+        <div style="font-size:11px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">🔔 Budget Alerts</div>
+        <div class="sb-toggle-row">
+          <span class="sb-toggle-label" style="font-size:12px">Enable alerts</span>
+          <label class="sw-wrap"><input type="checkbox" id="alertsEnabled" onchange="saveBudgetAlertSettings()"><span class="sw-slider"></span></label>
+        </div>
+        <div class="sb-row">
+          <span class="sb-label">Alert threshold</span>
+          <select class="sb-select" id="alertThreshold" onchange="saveBudgetAlertSettings()">
+            <option value="70">70% spent</option>
+            <option value="80" selected>80% spent</option>
+            <option value="90">90% spent</option>
+            <option value="100">100% spent (over budget)</option>
+          </select>
+        </div>
+        <div id="alertsList" style="margin-top:4px"></div>
+
+        <div class="sb-divider"></div>
+
+        <!-- Savings Goal Tracker -->
+        <div style="font-size:11px;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">💰 Savings Goals</div>
+        <div id="savingsGoalList"></div>
+        <button class="sb-add-btn" onclick="addSavingsGoal()">＋ Add savings goal</button>
+
+      </div>
+    </div>
+
   </div><!-- /sb-body -->
 </aside>
 
@@ -756,6 +798,10 @@ const DEFAULT_CATS = {
 
 /* ── STATE ───────────────────────────────────────── */
 let entries = {}, budgets = {}, customCats = {...DEFAULT_CATS}, recurring = [];
+// Initialize sbData early so budget modal can access it before sidebar JS runs
+let sbData = JSON.parse(localStorage.getItem('sb_data')||'{}');
+if(!sbData.catBudgets) sbData.catBudgets={};
+if(!sbData.alertSettings) sbData.alertSettings={enabled:true,threshold:80};
 let viewYear, viewMonth, viewWeekStart, activeTab = 'month';
 let formRows = [{ cat:'lunch', amount:'', notes:'', rec:false, payMethod:'upi' }];
 let formDate = '';
@@ -1099,10 +1145,10 @@ function buildNav(){
           <span style="max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${user.name}</span>
         </button>
       </div>`
-    : `<button class="nav-btn" onclick="window.location.href='auth.html'" style="font-size:12px;font-weight:600;width:auto;padding:0 12px">Sign In</button>`;
+    : `<button class="nav-btn" onclick="window.location.href='/auth'" style="font-size:12px;font-weight:600;width:auto;padding:0 12px">Sign In</button>`;
   const themeBtn = `<button class="theme-toggle" id="themeToggleBtn" title="${darkMode?'Switch to light mode':'Switch to dark mode'}">${darkMode?'☀️':'🌙'}</button>`;
   const menuBtn = `<div class="menu-wrap"><button class="nav-btn" id="menuBtn" title="More options" style="font-size:18px;letter-spacing:1px">⋮</button></div>`;
-  const logoHtml=`<a class="nav-logo-wrap" href="index.html" title="SpendWise">
+  const logoHtml=`<a class="nav-logo-wrap" href="/" title="Budgetra">
     <div class="nav-logo-icon">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M4 18L8 14L12 16L20 8M20 8V13M20 8H15" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -1111,7 +1157,7 @@ function buildNav(){
         <circle cx="20" cy="8" r="1.5" fill="white"/>
       </svg>
     </div>
-    <span class="nav-logo-name">Spend<span>Wise</span></span>
+    <span class="nav-logo-name">Budget<span>ra</span></span>
   </a>`;
   if(activeTab==='week'){
     const dates=getWeekDates(viewWeekStart);
@@ -1201,19 +1247,56 @@ function buildMonthView(){
   const mr=budget?budget-mt:null;
   const pct=budget?Math.min(100,(mt/budget)*100):0;
   const left=daysLeft(viewYear,viewMonth);
-  const udb=(budget&&left>0)?mr/left:null;
   const tdISO=today();
-  // "Today's limit" = UDB at start of today = (budget - all spend before today) / days left including today
-  // This is fixed for the whole day and only recalculates at midnight
+
+  // ── Rent exclusion (fixed committed expense, excluded from daily budget calc) ──
+  const rentSpentThisMonth=monthDates(viewYear,viewMonth).reduce((s,k)=>
+    s+(entries[k]||[]).filter(e=>isRentCat(e.cat)).reduce((a,e)=>a+e.amount,0),0);
+
+  // ── Discretionary budget = total budget minus rent already paid ──
+  const discretionaryBudget=budget?budget-rentSpentThisMonth:null;
+
+  // ── Spend before today (excl. rent) — fixed at midnight, doesn't change during the day ──
   const spentBeforeToday=budget?Object.keys(entries)
     .filter(k=>k.startsWith(monthKey(viewYear,viewMonth))&&k<tdISO)
-    .reduce((s,k)=>s+dayTotal(k),0):0;
-  const todayLimit=(budget&&left>0)?(budget-spentBeforeToday)/left:dl;
+    .reduce((s,k)=>s+dayTotalExcludingRent(k),0):0;
+
+  // ── Today's spend (excl. rent) — real-time ──
   const tdRaw=(ic&&(entries[tdISO]||[]).length)?dayTotal(tdISO):null;
   const tdNoRent=(ic&&(entries[tdISO]||[]).length)?dayTotalExcludingRent(tdISO):null;
   const td=tdRaw;
-  // Remaining today = todayLimit - today's non-rent spend (real-time)
-  const tr=todayLimit!==null?(todayLimit-(tdNoRent||0)):null;
+  const todaySpendNoRent=tdNoRent||0;
+
+  // ── Today's limit: fixed at start of day (midnight calculation) ──
+  // = discretionary budget remaining before today / days left including today
+  const todayLimit=(discretionaryBudget&&left>0)?(discretionaryBudget-spentBeforeToday)/left:dl;
+
+  // ── UDB logic ──
+  // Normal: UDB = todayLimit (fixed for the day, refreshes at midnight)
+  // Overspending: UDB recalculates in real-time to show damage to future days
+  const isOverspendingToday=todaySpendNoRent>(todayLimit||0);
+  let udb;
+  if(!budget||!left){
+    udb=null;
+  } else if(isOverspendingToday){
+    // Real-time: spread remaining discretionary budget over days AFTER today
+    const remainingAfterToday=discretionaryBudget-spentBeforeToday-todaySpendNoRent;
+    const daysAfterToday=Math.max(0,left-1);
+    udb=daysAfterToday>0?remainingAfterToday/daysAfterToday:Math.max(0,remainingAfterToday);
+  } else {
+    // Fixed for today = todayLimit
+    udb=todayLimit;
+  }
+
+  // ── Burn rate for UDB subtitle ──
+  const daysLogged=monthDates(viewYear,viewMonth).length;
+  const actualDailyAvg=daysLogged>0?(mt-rentSpentThisMonth)/daysLogged:0;
+  const burnRateRatio=todayLimit>0?actualDailyAvg/todayLimit:0;
+  const projectedTotal=rentSpentThisMonth+(actualDailyAvg*daysInMonth(viewYear,viewMonth));
+  const projectedOverrun=budget?projectedTotal-budget:null;
+
+  // ── Remaining today ──
+  const tr=todayLimit!==null?(todayLimit-todaySpendNoRent):null;
   const {value:dns, pending:dnsPending}=netSavedOverspent(viewYear,viewMonth);
   const mom=momChange(viewYear,viewMonth);
   const categoryHtml=buildCategoryBreakdown(viewYear,viewMonth);
@@ -2205,6 +2288,7 @@ function openHeatmapDayModal(iso){
 function openBudgetModal(y,m){
   const ex=getMonthBudget(y,m);
   const exRaw=budgets[monthKey(y,m)];
+  const exCatBudgets=sbData?.catBudgets||{};
 
   // Restore saved range or default to full month
   const savedStart=exRaw&&typeof exRaw==='object'?exRaw.startDay:1;
@@ -2218,36 +2302,87 @@ function openBudgetModal(y,m){
   let calYear=y, calMonth=m;
   let selStart={y:savedSY,m:savedSM,d:savedStart};
   let selEnd={y:savedEY,m:savedEM,d:Math.min(savedEnd,daysInMonth(savedEY,savedEM))};
-  let picking='start';  // 'start' | 'end'
-  let clickCount=0;     // track whether we have a start yet
+  let picking='start';
+  let budgetTab='general'; // 'general' | 'category'
+
+  // Build category rows HTML
+  const catRowsHtml=Object.entries(customCats).map(([k,c])=>`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <span style="width:10px;height:10px;border-radius:50%;background:${c.color};flex-shrink:0;display:inline-block"></span>
+      <span style="flex:1;font-size:13px;color:var(--text)">${c.label}</span>
+      <div style="display:flex;align-items:center;gap:4px">
+        <span style="font-size:13px;color:var(--muted)">₹</span>
+        <input type="number" class="cat-budget-inp" data-cat="${k}" placeholder="No limit" min="0"
+          value="${exCatBudgets[k]||''}"
+          style="width:90px;border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px 8px;font-family:inherit;font-size:13px;color:var(--text);background:var(--surface-2);outline:none;text-align:right">
+      </div>
+    </div>`).join('');
 
   document.getElementById('modalArea').innerHTML=`
-    <div class="modal-overlay" id="modalOverlay"><div class="modal" style="max-width:420px">
+    <div class="modal-overlay" id="modalOverlay"><div class="modal" style="max-width:420px;max-height:90vh;overflow-y:auto">
       <h3>${ex?'Edit':'Set'} budget — ${MONTHS[m]} ${y}</h3>
-      <p>Enter your budget and select the date range it applies to.</p>
-      <div class="modal-input-wrap" style="margin-bottom:16px"><span>₹</span>
-        <input type="number" id="budgetInput" placeholder="e.g. 5250" min="100" step="1" value="${ex||''}">
+
+      <!-- Tab switcher -->
+      <div style="display:flex;gap:4px;background:var(--surface-2);border-radius:var(--radius-sm);padding:3px;margin-bottom:16px">
+        <button id="tabGeneral" onclick="switchBudgetTab('general')" style="flex:1;padding:7px;border:none;border-radius:7px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;background:var(--text);color:var(--surface);transition:all .15s">Overall Budget</button>
+        <button id="tabCategory" onclick="switchBudgetTab('category')" style="flex:1;padding:7px;border:none;border-radius:7px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--muted);transition:all .15s">Category-wise</button>
       </div>
-      <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Date range</div>
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-        <button id="pickStartBtn" class="bc-range-pill bc-range-pill-active">
-          <span style="font-size:10px;color:var(--muted);display:block;margin-bottom:1px">START</span>
-          <span id="startLabel" style="font-weight:700;font-size:13px"></span>
-        </button>
-        <span style="color:var(--muted);font-size:18px">→</span>
-        <button id="pickEndBtn" class="bc-range-pill">
-          <span style="font-size:10px;color:var(--muted);display:block;margin-bottom:1px">END</span>
-          <span id="endLabel" style="font-weight:700;font-size:13px"></span>
-        </button>
+
+      <!-- General budget panel -->
+      <div id="panelGeneral">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Set an overall monthly budget with a custom date range.</p>
+        <div class="modal-input-wrap" style="margin-bottom:16px"><span>₹</span>
+          <input type="number" id="budgetInput" placeholder="e.g. 5250" min="100" step="1" value="${ex||''}">
+        </div>
+        <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Date range</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+          <button id="pickStartBtn" class="bc-range-pill bc-range-pill-active">
+            <span style="font-size:10px;color:var(--muted);display:block;margin-bottom:1px">START</span>
+            <span id="startLabel" style="font-weight:700;font-size:13px"></span>
+          </button>
+          <span style="color:var(--muted);font-size:18px">→</span>
+          <button id="pickEndBtn" class="bc-range-pill">
+            <span style="font-size:10px;color:var(--muted);display:block;margin-bottom:1px">END</span>
+            <span id="endLabel" style="font-weight:700;font-size:13px"></span>
+          </button>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <button id="calPrev" class="nav-btn" style="width:28px;height:28px;font-size:13px">‹</button>
+          <span id="calMonthLabel" style="font-size:13px;font-weight:600"></span>
+          <button id="calNext" class="nav-btn" style="width:28px;height:28px;font-size:13px">›</button>
+        </div>
+        <div id="budgetCal" class="budget-cal"></div>
+        <div class="modal-hint" id="dailyHint" style="margin-top:10px"></div>
       </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-        <button id="calPrev" class="nav-btn" style="width:28px;height:28px;font-size:13px">‹</button>
-        <span id="calMonthLabel" style="font-size:13px;font-weight:600"></span>
-        <button id="calNext" class="nav-btn" style="width:28px;height:28px;font-size:13px">›</button>
+
+      <!-- Category-wise panel -->
+      <div id="panelCategory" style="display:none">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Set individual spend limits per category for ${MONTHS_S[m]} ${y}.</p>
+        <div style="max-height:160px;overflow-y:auto;padding-right:4px;margin-bottom:14px">
+          ${catRowsHtml}
+        </div>
+        <div style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Date range</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+          <button id="pickStartBtnCat" class="bc-range-pill bc-range-pill-active">
+            <span style="font-size:10px;color:var(--muted);display:block;margin-bottom:1px">START</span>
+            <span id="startLabelCat" style="font-weight:700;font-size:13px"></span>
+          </button>
+          <span style="color:var(--muted);font-size:18px">→</span>
+          <button id="pickEndBtnCat" class="bc-range-pill">
+            <span style="font-size:10px;color:var(--muted);display:block;margin-bottom:1px">END</span>
+            <span id="endLabelCat" style="font-weight:700;font-size:13px"></span>
+          </button>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <button id="calPrevCat" class="nav-btn" style="width:28px;height:28px;font-size:13px">‹</button>
+          <span id="calMonthLabelCat" style="font-size:13px;font-weight:600"></span>
+          <button id="calNextCat" class="nav-btn" style="width:28px;height:28px;font-size:13px">›</button>
+        </div>
+        <div id="budgetCalCat" class="budget-cal"></div>
+        <div class="modal-hint" id="catDateHint" style="margin-top:8px"></div>
       </div>
-      <div id="budgetCal" class="budget-cal"></div>
-      <div class="modal-hint" id="dailyHint" style="margin-top:10px"></div>
-      <div class="modal-footer">
+
+      <div class="modal-footer" style="margin-top:14px">
         ${ex?`<button class="btn btn-ghost" id="removeBudgetBtn">Remove</button>`:''}
         <button class="btn btn-ghost" id="cancelModalBtn">Cancel</button>
         <button class="btn btn-primary" id="saveBudgetBtn">Save</button>
@@ -2390,16 +2525,128 @@ function openBudgetModal(y,m){
     updateLabels(); renderCal();
   });
 
-  document.getElementById('saveBudgetBtn').addEventListener('click',()=>{
-    const v=parseFloat(inp.value);
-    if(!v||v<100){inp.focus();showToast('Enter a budget of at least ₹100');return;}
-    if(!selStart||!selEnd){showToast('Select a date range');return;}
-    const ms1=dMs(selStart.y,selStart.m,selStart.d);
-    const ms2=dMs(selEnd.y,selEnd.m,selEnd.d);
-    if(ms2<ms1){showToast('End date must be after start date');return;}
+  // ── Category calendar (mirrors general calendar logic) ──
+  let catCalYear=y, catCalMonth=m;
+  let catSelStart={y:savedSY,m:savedSM,d:savedStart};
+  let catSelEnd={y:savedEY,m:savedEM,d:Math.min(savedEnd,daysInMonth(savedEY,savedEM))};
+  let catPicking='start';
+
+  function catFmtSel(s){ return s?`${MONTHS_S[s.m]} ${s.d}, ${s.y}`:'—'; }
+  function setCatPicking(mode){
+    catPicking=mode;
+    document.getElementById('pickStartBtnCat').classList.toggle('bc-range-pill-active',mode==='start');
+    document.getElementById('pickEndBtnCat').classList.toggle('bc-range-pill-active',mode==='end');
+  }
+  function updateCatLabels(){
+    document.getElementById('startLabelCat').textContent=catFmtSel(catSelStart);
+    document.getElementById('endLabelCat').textContent=catFmtSel(catSelEnd);
+    document.getElementById('calMonthLabelCat').textContent=`${MONTHS[catCalMonth]} ${catCalYear}`;
+  }
+  function updateCatHint(){
+    if(!catSelStart||!catSelEnd) return;
+    const ms1=dMs(catSelStart.y,catSelStart.m,catSelStart.d);
+    const ms2=dMs(catSelEnd.y,catSelEnd.m,catSelEnd.d);
+    if(ms2<ms1){ document.getElementById('catDateHint').textContent='End date must be after start date'; return; }
     const days=Math.round((ms2-ms1)/86400000)+1;
-    budgets[monthKey(y,m)]={amount:v,daysConsidered:days,startDay:selStart.d,startMonth:selStart.m,startYear:selStart.y,endDay:selEnd.d,endMonth:selEnd.m,endYear:selEnd.y};
-    saveData();closeModal();render();showToast('Budget saved ✓');
+    document.getElementById('catDateHint').textContent=`${days} day${days!==1?'s':''} · ${catFmtSel(catSelStart)} – ${catFmtSel(catSelEnd)}`;
+  }
+  function renderCatCal(){
+    const cal=document.getElementById('budgetCalCat');
+    if(!cal) return;
+    const totalD=daysInMonth(catCalYear,catCalMonth);
+    const firstDow=new Date(catCalYear,catCalMonth,1).getDay();
+    const todayISO=today();
+    const msS=catSelStart?dMs(catSelStart.y,catSelStart.m,catSelStart.d):null;
+    const msE=catSelEnd?dMs(catSelEnd.y,catSelEnd.m,catSelEnd.d):null;
+    let html=`<div class="budget-cal-head">`;
+    ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(d=>{ html+=`<span>${d}</span>`; });
+    html+=`</div><div class="budget-cal-grid">`;
+    for(let i=0;i<firstDow;i++) html+=`<div class="bc-day bc-empty"></div>`;
+    for(let d=1;d<=totalD;d++){
+      const ms=dMs(catCalYear,catCalMonth,d);
+      const isStart=msS&&ms===msS; const isEnd=msE&&ms===msE;
+      const inRange=msS&&msE&&ms>msS&&ms<msE;
+      const isToday=`${catCalYear}-${String(catCalMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`===todayISO;
+      let cls='bc-day';
+      if(isStart) cls+=' bc-sel-start'; if(isEnd) cls+=' bc-sel-end';
+      if(inRange) cls+=' bc-in-range'; if(isToday) cls+=' bc-today';
+      html+=`<div class="${cls}" data-d="${d}">${d}</div>`;
+    }
+    html+=`</div>`;
+    cal.innerHTML=html;
+    cal.querySelectorAll('.bc-day[data-d]').forEach(el=>{
+      el.addEventListener('click',()=>{
+        const d=parseInt(el.dataset.d);
+        const ms=dMs(catCalYear,catCalMonth,d);
+        if(catPicking==='start'){
+          catSelStart={y:catCalYear,m:catCalMonth,d};
+          if(catSelEnd&&dMs(catSelEnd.y,catSelEnd.m,catSelEnd.d)<=ms) catSelEnd=null;
+          setCatPicking('end');
+        } else {
+          const msS2=catSelStart?dMs(catSelStart.y,catSelStart.m,catSelStart.d):null;
+          if(msS2&&ms<=msS2){ catSelStart={y:catCalYear,m:catCalMonth,d}; catSelEnd=null; setCatPicking('end'); }
+          else { catSelEnd={y:catCalYear,m:catCalMonth,d}; }
+        }
+        updateCatLabels(); updateCatHint(); renderCatCal();
+      });
+    });
+  }
+  setCatPicking('start'); updateCatLabels(); updateCatHint(); renderCatCal();
+  document.getElementById('pickStartBtnCat').addEventListener('click',()=>{ setCatPicking('start'); renderCatCal(); });
+  document.getElementById('pickEndBtnCat').addEventListener('click',()=>{ setCatPicking('end'); renderCatCal(); });
+  document.getElementById('calPrevCat').addEventListener('click',()=>{ catCalMonth--; if(catCalMonth<0){catCalMonth=11;catCalYear--;} updateCatLabels(); renderCatCal(); });
+  document.getElementById('calNextCat').addEventListener('click',()=>{ catCalMonth++; if(catCalMonth>11){catCalMonth=0;catCalYear++;} updateCatLabels(); renderCatCal(); });
+
+  // Tab switching
+  window.switchBudgetTab=function(tab){
+    budgetTab=tab;
+    document.getElementById('panelGeneral').style.display=tab==='general'?'block':'none';
+    document.getElementById('panelCategory').style.display=tab==='category'?'block':'none';
+    document.getElementById('tabGeneral').style.background=tab==='general'?'var(--text)':'transparent';
+    document.getElementById('tabGeneral').style.color=tab==='general'?'var(--surface)':'var(--muted)';
+    document.getElementById('tabCategory').style.background=tab==='category'?'var(--text)':'transparent';
+    document.getElementById('tabCategory').style.color=tab==='category'?'var(--surface)':'var(--muted)';
+  };
+
+  document.getElementById('saveBudgetBtn').addEventListener('click',()=>{
+    if(budgetTab==='general'){
+      const v=parseFloat(inp.value);
+      if(!v||v<100){inp.focus();showToast('Enter a budget of at least ₹100');return;}
+      if(!selStart||!selEnd){showToast('Select a date range');return;}
+      const ms1=dMs(selStart.y,selStart.m,selStart.d);
+      const ms2=dMs(selEnd.y,selEnd.m,selEnd.d);
+      if(ms2<ms1){showToast('End date must be after start date');return;}
+      const days=Math.round((ms2-ms1)/86400000)+1;
+      budgets[monthKey(y,m)]={amount:v,daysConsidered:days,startDay:selStart.d,startMonth:selStart.m,startYear:selStart.y,endDay:selEnd.d,endMonth:selEnd.m,endYear:selEnd.y};
+      saveData();closeModal();render();showToast('Overall budget saved ✓');
+    } else {
+      // Save category-wise budgets — read all inputs including hidden ones
+      if(!window.sbData) window.sbData={};
+      if(!sbData.catBudgets) sbData.catBudgets={};
+      // Force panel visible briefly to ensure inputs are in DOM
+      const panel=document.getElementById('panelCategory');
+      const wasHidden=panel&&panel.style.display==='none';
+      if(wasHidden) panel.style.display='block';
+      document.querySelectorAll('.cat-budget-inp').forEach(el=>{
+        const cat=el.dataset.cat;
+        const val=parseFloat(el.value)||0;
+        if(val>0) sbData.catBudgets[cat]=val;
+        else delete sbData.catBudgets[cat];
+      });
+      if(wasHidden) panel.style.display='none';
+      // Store date range for category budgets
+      if(catSelStart&&catSelEnd){
+        const ms1=dMs(catSelStart.y,catSelStart.m,catSelStart.d);
+        const ms2=dMs(catSelEnd.y,catSelEnd.m,catSelEnd.d);
+        if(ms2>=ms1){
+          const days=Math.round((ms2-ms1)/86400000)+1;
+          sbData.catBudgetRange={days,selStart:catSelStart,selEnd:catSelEnd};
+        }
+      }
+      localStorage.setItem('sb_data',JSON.stringify(sbData));
+      if(typeof renderCatBudgets==='function'&&document.getElementById('catBudgetList')) renderCatBudgets();
+      closeModal();showToast('Category budgets saved ✓');
+    }
   });
   document.getElementById('cancelModalBtn').addEventListener('click',closeModal);
   document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
@@ -2892,7 +3139,7 @@ function bindEvents(){
         const app = getApps().length ? getApps()[0] : initializeApp(_fbConfig);
         await signOut(getAuth(app));
       }catch(e){}
-      window.location.href='auth.html';
+      window.location.href='/auth';
     });
     setTimeout(()=>{
       document.addEventListener('click',function handler(ev){
@@ -3253,7 +3500,7 @@ function showToast(msg){
 /* ── BOOT ────────────────────────────────────────── */
 (function authGuard(){
   const user=JSON.parse(localStorage.getItem('exp_user')||'null');
-  if(!user||!user.loggedIn) window.location.href='auth.html';
+  if(!user||!user.loggedIn) window.location.href='/auth';
 })();
 loadData();   // load from localStorage instantly
 initTheme();
@@ -3269,8 +3516,8 @@ setInterval(()=>{
    SIDEBAR — Indian Features
 ══════════════════════════════════════════════════ */
 // ── State ──
-let sbData = JSON.parse(localStorage.getItem('sb_data')||'{}');
-// sbData: { fest:{active,festival,budget,start,end,spends:{cat:amt}}, emis:[...], payMethod:'upi', upiApp:'gpay', payTags:{isoDate:{method,upiApp}} }
+// sbData already initialized at top of script
+// sbData: { fest, emis, payMethod, upiApp, payTags, catBudgets, alertSettings, savingsGoals, hh }
 if(!sbData.fest) sbData.fest={active:false,festival:'diwali',budget:0,start:'',end:'',spends:{}};
 if(!sbData.emis) sbData.emis=[];
 if(!sbData.payMethod) sbData.payMethod='upi';
@@ -3467,6 +3714,158 @@ function markEmiPaid(id,checked){
 }
 function deleteEmi(id){ customConfirm('Remove this EMI?',()=>{ sbData.emis=sbData.emis.filter(e=>e.id!==id); saveSbData(); renderEmis(); },null); }
 renderEmis();
+
+// ── HOUSEHOLD & FAMILY ──
+if(!sbData.hh) sbData.hh={grocBudget:0,grocItems:[],utilities:[],vehicles:[],eduFunds:[]};
+document.getElementById('grocBudget').value=sbData.hh.grocBudget||'';
+function saveHhData(){ sbData.hh.grocBudget=parseFloat(document.getElementById('grocBudget').value)||0; saveSbData(); renderGrocery(); }
+function addGrocItem(){ const name=prompt('Item name (e.g. Rice, Milk):'); if(!name) return; const est=parseFloat(prompt('Estimated cost (₹):'))||0; sbData.hh.grocItems.push({id:uid(),name,est,actual:0}); saveSbData(); renderGrocery(); }
+function deleteGrocItem(id){ sbData.hh.grocItems=sbData.hh.grocItems.filter(i=>i.id!==id); saveSbData(); renderGrocery(); }
+function renderGrocery(){
+  const items=sbData.hh.grocItems||[];
+  const totalEst=items.reduce((s,i)=>s+i.est,0);
+  const totalAct=items.reduce((s,i)=>s+i.actual,0);
+  let html=items.map(i=>`<div style="background:var(--surface-2);border-radius:8px;padding:8px 10px;margin-bottom:6px;border:1px solid var(--border)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><span style="font-size:12px;font-weight:600;color:var(--text)">${i.name}</span><button onclick="deleteGrocItem('${i.id}')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px">✕</button></div><div style="display:flex;gap:8px;font-size:11px;align-items:center"><span style="color:var(--muted)">Est: ₹${i.est}</span><input type="number" placeholder="Actual" value="${i.actual||''}" onchange="sbData.hh.grocItems.find(x=>x.id==='${i.id}').actual=parseFloat(this.value)||0;saveSbData();renderGrocery()" style="width:70px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:2px 6px;font-size:11px;color:var(--text)"></div></div>`).join('');
+  if(!items.length) html='<div class="sb-info">No items yet.</div>';
+  document.getElementById('grocList').innerHTML=html;
+  const budget=sbData.hh.grocBudget||0;
+  const pct=budget>0?Math.min(100,(totalAct/budget)*100):0;
+  document.getElementById('grocSummary').innerHTML=budget>0?`<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px"><span>Est: ₹${totalEst}</span><span>Actual: ₹${totalAct}</span></div><div class="sb-prog-bg"><div class="sb-prog-fill" style="width:${pct}%"></div></div>`:'';
+}
+renderGrocery();
+
+function addUtility(){ const name=prompt('Utility name (e.g. Electricity, Internet):'); if(!name) return; sbData.hh.utilities.push({id:uid(),name,history:[]}); saveSbData(); renderUtilities(); }
+function deleteUtility(id){ sbData.hh.utilities=sbData.hh.utilities.filter(u=>u.id!==id); saveSbData(); renderUtilities(); }
+function logUtility(id){ const inp=document.getElementById('util_'+id); const amt=parseFloat(inp.value); if(!amt||amt<=0){showToast('Enter an amount');return;} const u=sbData.hh.utilities.find(x=>x.id===id); if(!u) return; u.history.push({amt,month:`${MONTHS_S[viewMonth]} ${viewYear}`,date:today()}); inp.value=''; saveSbData(); renderUtilities(); showToast('Utility logged ✓'); }
+function renderUtilities(){
+  const utils=sbData.hh.utilities||[];
+  let html=utils.map(u=>`<div style="background:var(--surface-2);border-radius:8px;padding:10px;margin-bottom:6px;border:1px solid var(--border)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:12px;font-weight:600;color:var(--text)">${u.name}</span><button onclick="deleteUtility('${u.id}')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px">✕</button></div><div style="display:flex;gap:6px;margin-bottom:4px"><input type="number" placeholder="₹ amount" id="util_${u.id}" style="flex:1;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:12px;color:var(--text)"><button onclick="logUtility('${u.id}')" class="sb-ghost-btn" style="padding:5px 10px;font-size:11px">Log</button></div>${u.history.length?`<div style="font-size:10px;color:var(--muted)">Last 3: ${u.history.slice(-3).map(h=>`₹${h.amt} (${h.month})`).join(', ')}</div>`:''}</div>`).join('');
+  if(!utils.length) html='<div class="sb-info">No utilities tracked yet.</div>';
+  document.getElementById('utilityList').innerHTML=html;
+}
+renderUtilities();
+
+function addVehicle(){ const name=prompt('Vehicle name (e.g. Honda City):'); if(!name) return; sbData.hh.vehicles.push({id:uid(),name,expenses:[]}); saveSbData(); renderVehicles(); }
+function deleteVehicle(id){ sbData.hh.vehicles=sbData.hh.vehicles.filter(v=>v.id!==id); saveSbData(); renderVehicles(); }
+function logVehExp(id,type){ const amt=parseFloat(prompt(`${type} amount (₹):`)); if(!amt||amt<=0) return; const v=sbData.hh.vehicles.find(x=>x.id===id); if(!v) return; v.expenses.push({type,amt,date:today()}); saveSbData(); renderVehicles(); showToast('Vehicle expense logged ✓'); }
+function renderVehicles(){
+  const vehs=sbData.hh.vehicles||[];
+  let html=vehs.map(v=>`<div style="background:var(--surface-2);border-radius:8px;padding:10px;margin-bottom:6px;border:1px solid var(--border)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:12px;font-weight:600;color:var(--text)">${v.name}</span><button onclick="deleteVehicle('${v.id}')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px">✕</button></div><div style="display:flex;gap:4px;margin-bottom:6px;flex-wrap:wrap">${['⛽ Fuel','🔧 Service','📄 Insurance','🛣️ Toll'].map(t=>`<button onclick="logVehExp('${v.id}','${t}')" class="sb-chip" style="font-size:10px;padding:3px 8px">${t}</button>`).join('')}</div><div style="font-size:11px;color:var(--muted)">Total: <strong style="color:var(--text)">₹${Math.round(v.expenses.reduce((s,e)=>s+e.amt,0)).toLocaleString('en-IN')}</strong></div></div>`).join('');
+  if(!vehs.length) html='<div class="sb-info">No vehicles added yet.</div>';
+  document.getElementById('vehicleList').innerHTML=html;
+}
+renderVehicles();
+
+function addEduFund(){ const name=prompt('Child name:'); if(!name) return; const target=parseFloat(prompt('College fund target (₹):'))||0; const year=parseInt(prompt('Target year (e.g. 2035):'))||new Date().getFullYear()+10; sbData.hh.eduFunds.push({id:uid(),name,target,year,saved:0}); saveSbData(); renderEduFunds(); }
+function deleteEduFund(id){ sbData.hh.eduFunds=sbData.hh.eduFunds.filter(f=>f.id!==id); saveSbData(); renderEduFunds(); }
+function addToEduFund(id){ const inp=document.getElementById('edu_'+id); const amt=parseFloat(inp.value); if(!amt||amt<=0){showToast('Enter an amount');return;} const f=sbData.hh.eduFunds.find(x=>x.id===id); if(!f) return; f.saved+=amt; inp.value=''; saveSbData(); renderEduFunds(); showToast('Added to education fund ✓'); }
+function renderEduFunds(){
+  const funds=sbData.hh.eduFunds||[];
+  let html=funds.map(f=>{
+    const pct=f.target>0?Math.min(100,(f.saved/f.target)*100):0;
+    const yearsLeft=f.year-new Date().getFullYear();
+    return `<div style="background:var(--surface-2);border-radius:8px;padding:10px;margin-bottom:6px;border:1px solid var(--border)"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div><div style="font-size:12px;font-weight:600;color:var(--text)">${f.name}</div><div style="font-size:10px;color:var(--muted)">Target: ₹${Math.round(f.target).toLocaleString('en-IN')} by ${f.year}</div></div><button onclick="deleteEduFund('${f.id}')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px">✕</button></div><div style="display:flex;gap:6px;margin-bottom:4px"><input type="number" placeholder="Add ₹" id="edu_${f.id}" style="flex:1;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:12px;color:var(--text)"><button onclick="addToEduFund('${f.id}')" class="sb-ghost-btn" style="padding:5px 10px;font-size:11px">Add</button></div><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:3px"><span>₹${Math.round(f.saved).toLocaleString('en-IN')} saved</span><span>${yearsLeft>0?yearsLeft+' yrs left':'Target reached!'}</span></div><div class="sb-prog-bg"><div class="sb-prog-fill green" style="width:${pct}%"></div></div></div>`;
+  }).join('');
+  if(!funds.length) html='<div class="sb-info">No education funds set up yet.</div>';
+  document.getElementById('eduList').innerHTML=html;
+}
+renderEduFunds();
+
+// ── CATEGORY BUDGET LIMITS, ALERTS & SAVINGS GOALS ──
+if(!sbData.savingsGoals) sbData.savingsGoals=[];
+
+// Init alert settings UI
+document.getElementById('alertsEnabled').checked=sbData.alertSettings.enabled;
+document.getElementById('alertThreshold').value=sbData.alertSettings.threshold;
+function saveBudgetAlertSettings(){ sbData.alertSettings.enabled=document.getElementById('alertsEnabled').checked; sbData.alertSettings.threshold=parseInt(document.getElementById('alertThreshold').value); saveSbData(); renderCatBudgets(); }
+
+function renderCatBudgets(){
+  const cats=Object.entries(customCats);
+  const spent=monthCatTotals(viewYear,viewMonth);
+  const threshold=sbData.alertSettings.threshold;
+  const enabled=sbData.alertSettings.enabled;
+  let alertsHtml='';
+
+  const html=cats.map(([k,c])=>{
+    const limit=sbData.catBudgets[k]||0;
+    const s=spent[k]||0;
+    const pct=limit>0?Math.min(100,(s/limit)*100):0;
+    const over=limit>0&&s>=limit;
+    const nearLimit=limit>0&&pct>=threshold&&!over;
+    // Build alert
+    if(enabled&&limit>0&&pct>=threshold){
+      const msg=over?`Over budget on <strong>${c.label}</strong>! Spent ₹${Math.round(s).toLocaleString('en-IN')} of ₹${Math.round(limit).toLocaleString('en-IN')}`:
+        `<strong>${c.label}</strong>: ${Math.round(pct)}% of budget used (₹${Math.round(s).toLocaleString('en-IN')} / ₹${Math.round(limit).toLocaleString('en-IN')})`;
+      alertsHtml+=`<div style="background:${over?'var(--red-bg)':'var(--orange-bg)'};border:1px solid ${over?'var(--red-bd)':'var(--orange-bd)'};border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:12px;color:${over?'var(--red)':'var(--orange)'}">
+        ${over?'🚨':'⚠️'} ${msg}
+      </div>`;
+    }
+    return `<div style="margin-bottom:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="width:10px;height:10px;border-radius:50%;background:${c.color};display:inline-block;flex-shrink:0"></span>
+          <span style="font-size:12px;font-weight:600;color:var(--text)">${c.label}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:4px">
+          <span style="font-size:11px;color:var(--muted)">₹</span>
+          <input type="number" value="${limit||''}" placeholder="No limit" min="0"
+            onchange="sbData.catBudgets['${k}']=parseFloat(this.value)||0;saveSbData();renderCatBudgets()"
+            style="width:72px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:3px 6px;font-size:12px;color:var(--text);text-align:right">
+        </div>
+      </div>
+      ${limit>0?`<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:2px"><span>₹${Math.round(s).toLocaleString('en-IN')} spent</span><span style="color:${over?'var(--red)':nearLimit?'var(--orange)':'var(--muted)'}">₹${Math.round(Math.max(0,limit-s)).toLocaleString('en-IN')} left</span></div>
+      <div class="sb-prog-bg"><div class="sb-prog-fill" style="width:${pct}%;background:${over?'var(--red)':nearLimit?'var(--orange)':'var(--primary)'}"></div></div>`:''}
+    </div>`;
+  }).join('');
+
+  document.getElementById('catBudgetList').innerHTML=html;
+  document.getElementById('alertsList').innerHTML=alertsHtml||`<div style="font-size:11px;color:var(--muted);text-align:center;padding:4px 0">${enabled?'No alerts — all within limits ✓':'Alerts disabled'}</div>`;
+}
+renderCatBudgets();
+
+// Savings Goals
+function addSavingsGoal(){
+  const name=prompt('Goal name (e.g. Emergency Fund, Vacation):');
+  if(!name) return;
+  const target=parseFloat(prompt('Target amount (₹):'))||0;
+  const monthly=parseFloat(prompt('Monthly savings target (₹):'))||0;
+  sbData.savingsGoals.push({id:uid(),name,target,monthly,saved:0,createdMonth:monthKey(viewYear,viewMonth)});
+  saveSbData(); renderSavingsGoals();
+}
+function deleteSavingsGoal(id){ sbData.savingsGoals=sbData.savingsGoals.filter(g=>g.id!==id); saveSbData(); renderSavingsGoals(); }
+function addToSavingsGoal(id){ const inp=document.getElementById('sav_'+id); const amt=parseFloat(inp.value); if(!amt||amt<=0){showToast('Enter an amount');return;} const g=sbData.savingsGoals.find(x=>x.id===id); if(!g) return; g.saved+=amt; inp.value=''; saveSbData(); renderSavingsGoals(); showToast('Savings updated ✓'); }
+function renderSavingsGoals(){
+  const goals=sbData.savingsGoals||[];
+  let html=goals.map(g=>{
+    const pct=g.target>0?Math.min(100,(g.saved/g.target)*100):0;
+    const monthsNeeded=g.monthly>0?Math.ceil((g.target-g.saved)/g.monthly):null;
+    return `<div style="background:var(--surface-2);border-radius:10px;padding:12px;margin-bottom:8px;border:1px solid var(--border)">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--text)">${g.name}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:1px">Target: ₹${Math.round(g.target).toLocaleString('en-IN')} · ₹${Math.round(g.monthly).toLocaleString('en-IN')}/mo</div>
+        </div>
+        <button onclick="deleteSavingsGoal('${g.id}')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px">✕</button>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px">
+        <span style="color:var(--green);font-weight:600">₹${Math.round(g.saved).toLocaleString('en-IN')} saved</span>
+        <span>${monthsNeeded&&monthsNeeded>0?monthsNeeded+' months to go':'🎉 Goal reached!'}</span>
+      </div>
+      <div class="sb-prog-bg"><div class="sb-prog-fill green" style="width:${pct}%"></div></div>
+      <div style="display:flex;gap:6px;margin-top:8px">
+        <input type="number" placeholder="Add ₹" id="sav_${g.id}" style="flex:1;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:6px 8px;font-size:12px;color:var(--text)">
+        <button onclick="addToSavingsGoal('${g.id}')" class="sb-ghost-btn" style="padding:6px 12px;font-size:12px">Add</button>
+      </div>
+    </div>`;
+  }).join('');
+  if(!goals.length) html='<div class="sb-info">No savings goals yet. Add one below.</div>';
+  document.getElementById('savingsGoalList').innerHTML=html;
+}
+renderSavingsGoals();
+
+// Re-render cat budgets when main data changes (hook into saveData)
+const _origSaveData=saveData;
+saveData=function(){ _origSaveData(); if(document.getElementById('catBudgetList')) renderCatBudgets(); };
 
 </script>
 </body>
