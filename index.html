@@ -2121,9 +2121,11 @@ function openCategoryModal(){
 /* ── EXPORT / IMPORT MODAL ───────────────────────── */
 function openExportImportModal(){
   document.getElementById('modalArea').innerHTML=`
-    <div class="modal-overlay" id="modalOverlay"><div class="modal">
+    <div class="modal-overlay" id="modalOverlay"><div class="modal" style="max-width:440px">
       <h3>Export &amp; Import</h3>
       <p>Back up your data or restore from a previous export.</p>
+
+      <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:8px">Local backup</div>
       <div class="exp-option" id="exportJsonBtn">
         <div class="exp-icon">📦</div>
         <div><div class="exp-label">Export JSON</div><div class="exp-sub">Full backup — all entries, budgets &amp; categories</div></div>
@@ -2137,17 +2139,56 @@ function openExportImportModal(){
         <div><div class="exp-label">Import JSON</div><div class="exp-sub">Restore from a previously exported JSON backup</div></div>
       </div>
       <input type="file" id="importJsonFile" accept=".json" style="display:none">
-      <div class="modal-footer" style="margin-top:8px">
+
+      <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:14px 0 8px">GitHub Gist sync</div>
+      <div class="exp-option" id="gistSaveBtn">
+        <div class="exp-icon">☁️</div>
+        <div><div class="exp-label">Save to Gist</div><div class="exp-sub">Upload backup to a private GitHub Gist</div></div>
+      </div>
+      <div class="exp-option" id="gistLoadBtn">
+        <div class="exp-icon">🔄</div>
+        <div><div class="exp-label">Load from Gist</div><div class="exp-sub">Restore data from a GitHub Gist URL</div></div>
+      </div>
+
+      <div id="gistTokenWrap" style="display:none;margin-top:10px">
+        <label style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:6px">GitHub Personal Access Token</label>
+        <input type="password" id="gistTokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+          style="width:100%;border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;font-family:inherit;font-size:13px;color:var(--text);background:var(--surface-2);outline:none;margin-bottom:6px">
+        <div style="font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:10px">
+          Create a token at <strong>github.com → Settings → Developer settings → Personal access tokens → Tokens (classic)</strong> with <strong>gist</strong> scope. Token is stored locally only.
+        </div>
+        <div id="gistIdWrap" style="display:none;margin-bottom:10px">
+          <label style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:6px">Gist ID (for loading)</label>
+          <input type="text" id="gistIdInput" placeholder="e.g. a1b2c3d4e5f6..."
+            style="width:100%;border:1px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;font-family:inherit;font-size:13px;color:var(--text);background:var(--surface-2);outline:none">
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary" id="gistActionBtn" style="flex:1">Save to Gist</button>
+          <button class="btn btn-ghost" id="gistCancelBtn">Cancel</button>
+        </div>
+        <div id="gistStatus" style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center"></div>
+      </div>
+
+      <div class="modal-footer" style="margin-top:12px">
         <button class="btn btn-ghost" id="cancelExpBtn">Close</button>
       </div>
     </div></div>`;
+
+  // ── Restore saved token ──
+  const savedToken=localStorage.getItem('exp_gist_token')||'';
+  const savedGistId=localStorage.getItem('exp_gist_id')||'';
+
   document.getElementById('cancelExpBtn').addEventListener('click',closeModal);
   document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
+
+  // ── Export JSON ──
   document.getElementById('exportJsonBtn').addEventListener('click',()=>{
     const data=JSON.stringify({entries,budgets,customCats,recurring},null,2);
     downloadFile(data,'expense-tracker-backup-'+today()+'.json','application/json');
     showToast('JSON exported ✓');
   });
+
+  // ── Export CSV ──
   document.getElementById('exportCsvBtn').addEventListener('click',()=>{
     const rows=[['Date','Category','Amount','Notes']];
     Object.entries(entries).sort().forEach(([date,items])=>{
@@ -2160,6 +2201,8 @@ function openExportImportModal(){
     downloadFile(csv,'expense-tracker-'+today()+'.csv','text/csv');
     showToast('CSV exported ✓');
   });
+
+  // ── Import JSON ──
   document.getElementById('importJsonTrigger').addEventListener('click',()=>{
     document.getElementById('importJsonFile').click();
   });
@@ -2181,6 +2224,82 @@ function openExportImportModal(){
       }catch(err){showToast('Invalid backup file');}
     };
     reader.readAsText(file);
+  });
+
+  // ── Gist: Save ──
+  let gistMode='save';
+  function showGistPanel(mode){
+    gistMode=mode;
+    const wrap=document.getElementById('gistTokenWrap');
+    const idWrap=document.getElementById('gistIdWrap');
+    const btn=document.getElementById('gistActionBtn');
+    wrap.style.display='block';
+    document.getElementById('gistTokenInput').value=savedToken;
+    if(mode==='load'){
+      idWrap.style.display='block';
+      document.getElementById('gistIdInput').value=savedGistId;
+      btn.textContent='Load from Gist';
+    } else {
+      idWrap.style.display='none';
+      btn.textContent='Save to Gist';
+    }
+  }
+
+  document.getElementById('gistSaveBtn').addEventListener('click',()=>showGistPanel('save'));
+  document.getElementById('gistLoadBtn').addEventListener('click',()=>showGistPanel('load'));
+  document.getElementById('gistCancelBtn').addEventListener('click',()=>{
+    document.getElementById('gistTokenWrap').style.display='none';
+  });
+
+  document.getElementById('gistActionBtn').addEventListener('click',async()=>{
+    const token=document.getElementById('gistTokenInput').value.trim();
+    const status=document.getElementById('gistStatus');
+    if(!token){showToast('Enter your GitHub token');return;}
+    localStorage.setItem('exp_gist_token',token);
+    const btn=document.getElementById('gistActionBtn');
+    btn.disabled=true; btn.textContent='Working…';
+    status.textContent='';
+
+    try{
+      if(gistMode==='save'){
+        const payload={
+          description:'Expense Tracker Backup — '+today(),
+          public:false,
+          files:{'expense-tracker.json':{content:JSON.stringify({entries,budgets,customCats,recurring},null,2)}}
+        };
+        const existingId=localStorage.getItem('exp_gist_id');
+        const url=existingId?`https://api.github.com/gists/${existingId}`:'https://api.github.com/gists';
+        const method=existingId?'PATCH':'POST';
+        const res=await fetch(url,{method,headers:{'Authorization':`token ${token}`,'Content-Type':'application/json'},body:JSON.stringify(payload)});
+        if(!res.ok) throw new Error('GitHub API error: '+res.status);
+        const json=await res.json();
+        localStorage.setItem('exp_gist_id',json.id);
+        status.innerHTML=`✓ Saved! Gist ID: <strong>${json.id}</strong><br><a href="${json.html_url}" target="_blank" style="color:var(--blue)">View on GitHub ↗</a>`;
+        showToast('Saved to Gist ✓');
+      } else {
+        const gistId=document.getElementById('gistIdInput').value.trim();
+        if(!gistId){showToast('Enter a Gist ID');btn.disabled=false;btn.textContent='Load from Gist';return;}
+        const res=await fetch(`https://api.github.com/gists/${gistId}`,{headers:{'Authorization':`token ${token}`}});
+        if(!res.ok) throw new Error('Gist not found');
+        const json=await res.json();
+        const fileContent=json.files['expense-tracker.json']?.content;
+        if(!fileContent) throw new Error('No expense-tracker.json in this Gist');
+        const d=JSON.parse(fileContent);
+        if(!d.entries) throw new Error('Invalid data');
+        customConfirm('This will replace all current data. Continue?',()=>{
+          entries=d.entries||{};budgets=d.budgets||{};
+          if(d.customCats) customCats=d.customCats;
+          if(d.recurring) recurring=d.recurring;
+          localStorage.setItem('exp_gist_id',gistId);
+          saveData();closeModal();render();showToast('Loaded from Gist ✓');
+        },null);
+      }
+    }catch(err){
+      status.textContent='Error: '+err.message;
+      showToast('Failed: '+err.message);
+    }
+    btn.disabled=false;
+    btn.textContent=gistMode==='save'?'Save to Gist':'Load from Gist';
   });
 }
 function downloadFile(content,filename,type){
