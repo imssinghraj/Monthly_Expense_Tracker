@@ -478,6 +478,35 @@ function applyTheme(){
 }
 
 /* ── PERSISTENCE ─────────────────────────────────── */
+// Firebase config — same project as auth.html
+const _fbConfig = {
+  apiKey:            "AIzaSyBgXYDJ0pVzTv1BwTiO21JYr3OVqNEHGrk",
+  authDomain:        "monthly-expense-tracker-18959.firebaseapp.com",
+  projectId:         "monthly-expense-tracker-18959",
+  storageBucket:     "monthly-expense-tracker-18959.firebasestorage.app",
+  messagingSenderId: "242437385267",
+  appId:             "1:242437385267:web:ee951fc32eb80b9fb18746"
+};
+let _db = null, _fbUid = null;
+
+async function initFirebase(){
+  try{
+    const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+    const { getFirestore, doc, setDoc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    const { getAuth, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+    const app = getApps().length ? getApps()[0] : initializeApp(_fbConfig);
+    _db = getFirestore(app);
+    const auth = getAuth(app);
+    // Get current user uid
+    await new Promise(resolve => {
+      const unsub = onAuthStateChanged(auth, user => {
+        if(user){ _fbUid = user.uid; }
+        unsub(); resolve();
+      });
+    });
+  }catch(e){ console.warn('Firebase init failed', e); }
+}
+
 function loadData(){
   try{
     const s = localStorage.getItem('exp_tracker_v3');
@@ -506,8 +535,38 @@ function loadData(){
   viewWeekStart = getWeekStart(today());
   heatmapYear = nowYear();
 }
+
+async function loadFromFirestore(){
+  if(!_db || !_fbUid) return;
+  try{
+    const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    const snap = await getDoc(doc(_db, 'users', _fbUid));
+    if(snap.exists()){
+      const d = snap.data();
+      budgets = d.budgets || {};
+      if(d.customCats) customCats = d.customCats;
+      if(d.recurring) recurring = d.recurring;
+      const raw = d.entries || {};
+      entries = {};
+      for(const [date, val] of Object.entries(raw)){
+        if(Array.isArray(val)) entries[date] = val;
+      }
+      // Update localStorage cache
+      localStorage.setItem('exp_tracker_v3', JSON.stringify({entries, budgets, customCats, recurring}));
+      render();
+    }
+  }catch(e){ console.warn('Firestore load failed', e); }
+}
+
 function saveData(){
+  // Save to localStorage immediately (fast)
   try{ localStorage.setItem('exp_tracker_v3', JSON.stringify({entries, budgets, customCats, recurring})); }catch(e){}
+  // Save to Firestore in background (cross-device sync)
+  if(_db && _fbUid){
+    import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js').then(({doc, setDoc})=>{
+      setDoc(doc(_db,'users',_fbUid), {entries, budgets, customCats, recurring}).catch(e=>console.warn('Firestore save failed',e));
+    });
+  }
 }
 function uid(){ return Math.random().toString(36).slice(2,9); }
 
@@ -2520,9 +2579,17 @@ function bindEvents(){
       </div>
       <button class="menu-item" id="miSignOut" style="color:var(--red)"><span class="mi-icon">🚪</span> Sign Out</button>`;
     wrap.appendChild(dropdown);
-    document.getElementById('miSignOut').addEventListener('click',()=>{
+    document.getElementById('miSignOut').addEventListener('click',async()=>{
       dropdown.remove();
       localStorage.removeItem('exp_user');
+      sessionStorage.setItem('exp_signed_out','1');
+      // Sign out from Firebase so session is fully cleared
+      try{
+        const { getAuth, signOut } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+        const { initializeApp, getApps } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+        const app = getApps().length ? getApps()[0] : initializeApp(_fbConfig);
+        await signOut(getAuth(app));
+      }catch(e){}
       window.location.href='auth.html';
     });
     setTimeout(()=>{
@@ -2871,9 +2938,11 @@ function showToast(msg){
   const user=JSON.parse(localStorage.getItem('exp_user')||'null');
   if(!user||!user.loggedIn) window.location.href='auth.html';
 })();
-loadData();
+loadData();   // load from localStorage instantly
 initTheme();
 render();
+// Then init Firebase and sync from Firestore in background
+initFirebase().then(()=>loadFromFirestore());
 setInterval(()=>{
   const n=new Date();
   if(n.getHours()===0&&n.getMinutes()===0){viewYear=nowYear();viewMonth=nowMonth();viewWeekStart=getWeekStart(today());render();}
