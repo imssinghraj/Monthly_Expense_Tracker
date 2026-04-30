@@ -487,6 +487,23 @@ html.dark .hm-no-data{background:var(--surface-3);opacity:.9}
 .exp-icon{font-size:22px;width:36px;text-align:center}
 .exp-label{font-size:13px;font-weight:600}
 .exp-sub{font-size:11px;color:var(--muted);margin-top:1px}
+/* ── NOTIFICATION BELL ── */
+.notif-wrap{position:relative}
+.notif-btn{background:none;border:1px solid var(--border);border-radius:var(--radius-sm);width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all .15s;position:relative;color:var(--text)}
+.notif-btn:hover{background:var(--surface-2)}
+.notif-badge{position:absolute;top:-5px;right:-5px;background:var(--red);color:#fff;font-size:9px;font-weight:700;min-width:16px;height:16px;border-radius:99px;display:flex;align-items:center;justify-content:center;padding:0 3px;border:2px solid var(--surface);line-height:1;pointer-events:none}
+.notif-dropdown{position:absolute;right:0;top:calc(100% + 8px);width:300px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-md);z-index:300;animation:fadeIn .15s ease;overflow:hidden;max-height:360px;overflow-y:auto}
+.notif-header{padding:10px 14px;border-bottom:1px solid var(--border);font-size:12px;font-weight:700;color:var(--text);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surface)}
+.notif-item{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:10px}
+.notif-item:last-child{border-bottom:none}
+.notif-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.notif-text{flex:1;font-size:12px;line-height:1.45;color:var(--text)}
+.notif-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.notif-empty{padding:20px 14px;text-align:center;font-size:12px;color:var(--muted)}
+.home-alerts-wrap{margin-bottom:14px;display:flex;flex-direction:column;gap:6px}
+.home-alert-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius-sm);font-size:13px;font-weight:500}
+.home-alert-item.over{background:var(--red-bg);border:1px solid var(--red-bd);color:var(--red)}
+.home-alert-item.near{background:var(--orange-bg);border:1px solid var(--orange-bd);color:var(--orange)}
 #toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--text);color:var(--surface);padding:8px 22px;border-radius:99px;font-size:13px;font-weight:600;transition:transform .25s;z-index:999;pointer-events:none}
 #toast.show{transform:translateX(-50%) translateY(0)}
 @media(max-width:480px){
@@ -801,7 +818,7 @@ let entries = {}, budgets = {}, customCats = {...DEFAULT_CATS}, recurring = [];
 // Initialize sbData early so budget modal can access it before sidebar JS runs
 let sbData = JSON.parse(localStorage.getItem('sb_data')||'{}');
 if(!sbData.catBudgets) sbData.catBudgets={};
-if(!sbData.alertSettings) sbData.alertSettings={enabled:true,threshold:80};
+if(!sbData.alertSettings) sbData.alertSettings={enabled:false,threshold:80};
 let viewYear, viewMonth, viewWeekStart, activeTab = 'month';
 let formRows = [{ cat:'lunch', amount:'', notes:'', rec:false, payMethod:'upi' }];
 let formDate = '';
@@ -927,7 +944,42 @@ function saveData(){
 }
 function uid(){ return Math.random().toString(36).slice(2,9); }
 
+/* ── ALERT HELPERS ───────────────────────────────── */
+function getAlertId(a){ return `${a.cat}-${a.type}`; }
+function getAlerts(includeRead=false){
+  if(sbData.alertSettings?.enabled!==true) return [];
+  const threshold=sbData.alertSettings?.threshold||80;
+  const spent=monthCatTotals(viewYear,viewMonth);
+  const readSet=new Set(sbData.readAlerts||[]);
+  const alerts=[];
+  Object.entries(sbData.catBudgets||{}).forEach(([k,limit])=>{
+    if(!(limit>0)) return;
+    const c=customCats[k];
+    if(!c) return;
+    const s=spent[k]||0;
+    const pct=(s/limit)*100;
+    let type=null;
+    if(s>=limit) type='over';
+    else if(pct>=threshold) type='near';
+    if(!type) return;
+    const id=`${k}-${type}`;
+    if(!includeRead&&readSet.has(id)) return;
+    alerts.push({id,type,cat:k,label:c.label,color:c.color,spent:s,limit,pct:Math.round(pct)});
+  });
+  return alerts;
+}
+function markAllAlertsRead(){
+  const all=getAlerts(true); // get all including already-read
+  if(!sbData.readAlerts) sbData.readAlerts=[];
+  all.forEach(a=>{ if(!sbData.readAlerts.includes(a.id)) sbData.readAlerts.push(a.id); });
+  saveSbData();
+  render(); // re-render nav badge + home banner
+}
+
 /* ── UTILS ───────────────────────────────────────── */
+// Detect local vs Vercel — use .html extension locally, clean URLs on Vercel
+function authPath(){ return location.hostname==='127.0.0.1'||location.hostname==='localhost'?'auth.html':'/auth'; }
+function homePath(){ return location.hostname==='127.0.0.1'||location.hostname==='localhost'?'index.html':'/'; }
 function today(){ const d=new Date(); const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,'0'); const dd=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${dd}`; }
 function nowYear(){ return new Date().getFullYear(); }
 function nowMonth(){ return new Date().getMonth(); }
@@ -1133,6 +1185,9 @@ function render(){
     activeTab==='year' ?buildYearView() :buildInsightsView();
   bindEvents();
   requestAnimationFrame(animateCounters);
+  // Re-render sidebar sections that depend on expense data
+  if(typeof renderCatBudgets==='function'&&document.getElementById('catBudgetList')) renderCatBudgets();
+  if(typeof renderPaySplit==='function'&&document.getElementById('sbPaySection')?.classList.contains('open')) renderPaySplit();
 }
 
 /* ── NAV ─────────────────────────────────────────── */
@@ -1145,9 +1200,18 @@ function buildNav(){
           <span style="max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${user.name}</span>
         </button>
       </div>`
-    : `<button class="nav-btn" onclick="window.location.href='/auth'" style="font-size:12px;font-weight:600;width:auto;padding:0 12px">Sign In</button>`;
+    : `<button class="nav-btn" onclick="window.location.href=authPath()" style="font-size:12px;font-weight:600;width:auto;padding:0 12px">Sign In</button>`;
   const themeBtn = `<button class="theme-toggle" id="themeToggleBtn" title="${darkMode?'Switch to light mode':'Switch to dark mode'}">${darkMode?'☀️':'🌙'}</button>`;
   const menuBtn = `<div class="menu-wrap"><button class="nav-btn" id="menuBtn" title="More options" style="font-size:18px;letter-spacing:1px">⋮</button></div>`;
+  // Bell icon — only shown when alerts explicitly enabled
+  const alerts=getAlerts(); // unread alerts only
+  const allAlerts=getAlerts(true); // all alerts including read
+  const bellBtn=sbData.alertSettings?.enabled===true?`<div class="notif-wrap">
+    <button class="notif-btn" id="notifBtn" title="Budget alerts">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      ${alerts.length?`<span class="notif-badge">${alerts.length}</span>`:''}
+    </button>
+  </div>`:'';
   const logoHtml=`<a class="nav-logo-wrap" href="/" title="Budgetra">
     <div class="nav-logo-icon">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1186,7 +1250,7 @@ function buildNav(){
         <div class="nav-arrows">
           <button class="nav-btn" id="nextWeekBtn">›</button>
         </div>
-        ${themeBtn}${userBtn}${menuBtn}
+        ${themeBtn}${bellBtn}${userBtn}${menuBtn}
       </div>
     </div>`;
   }
@@ -1208,7 +1272,7 @@ function buildNav(){
         <button class="nav-btn" id="nextMonthBtn">›</button>
         <button class="nav-btn" id="nextYearBtn">»</button>
       </div>
-      ${themeBtn}${userBtn}${menuBtn}
+      ${themeBtn}${bellBtn}${userBtn}${menuBtn}
     </div>
   </div>`;
 }
@@ -1360,8 +1424,18 @@ function buildMonthView(){
     </div>`;
   }
   s+='</div>';
+  // Home alert banner — only on current month when alerts enabled
+  const homeAlerts=getAlerts();
+  const homeAlertBanner=(ic&&homeAlerts.length)?`<div class="home-alerts-wrap section-block">
+    ${homeAlerts.map(a=>`<div class="home-alert-item ${a.type}">
+      <span>${a.type==='over'?'🚨':'⚠️'}</span>
+      <span>${a.type==='over'?`<strong>${a.label}</strong> is over budget — spent ${fmt(a.spent)} of ${fmt(a.limit)}`:
+        `<strong>${a.label}</strong> at ${a.pct}% of budget — ${fmt(a.spent)} of ${fmt(a.limit)}`}</span>
+    </div>`).join('')}
+  </div>`:'';
   return `
     <div class="section-block">${buildBudgetBanner(viewYear,viewMonth)}</div>
+    ${homeAlertBanner}
     ${s}
     <div class="dashboard-grid section-block">
       <div class="dashboard-primary">
@@ -2357,7 +2431,13 @@ function openBudgetModal(y,m){
 
       <!-- Category-wise panel -->
       <div id="panelCategory" style="display:none">
-        <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Set individual spend limits per category for ${MONTHS_S[m]} ${y}.</p>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:10px">Set individual spend limits per category for ${MONTHS_S[m]} ${y}.</p>
+        <div style="background:var(--orange-bg);border:1px solid var(--orange-bd);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:14px;display:flex;gap:8px;align-items:flex-start">
+          <span style="font-size:15px;flex-shrink:0">ℹ️</span>
+          <div style="font-size:12px;color:var(--orange);line-height:1.5">
+            <strong>Note:</strong> Category budgets are for tracking only. They do not replace the overall budget — daily limits, UDB, and all calculations are based on the <strong>Overall Budget</strong>. Please set an overall budget too.
+          </div>
+        </div>
         <div style="max-height:160px;overflow-y:auto;padding-right:4px;margin-bottom:14px">
           ${catRowsHtml}
         </div>
@@ -2388,6 +2468,24 @@ function openBudgetModal(y,m){
         <button class="btn btn-primary" id="saveBudgetBtn">Save</button>
       </div>
     </div></div>`;
+
+  // Track category budget values in memory as user types
+  // Pre-populate with existing saved values
+  const catBudgetDraft={...sbData.catBudgets};
+
+  // Bind input listeners — also capture pre-filled values immediately
+  setTimeout(()=>{
+    document.querySelectorAll('.cat-budget-inp').forEach(el=>{
+      const existing=parseFloat(el.value)||0;
+      if(existing>0) catBudgetDraft[el.dataset.cat]=existing;
+      else if(catBudgetDraft[el.dataset.cat]===undefined) delete catBudgetDraft[el.dataset.cat];
+      el.addEventListener('input',()=>{
+        const val=parseFloat(el.value)||0;
+        if(val>0) catBudgetDraft[el.dataset.cat]=val;
+        else delete catBudgetDraft[el.dataset.cat];
+      });
+    });
+  },0);
 
   if(!document.getElementById('budgetCalStyle')){
     const s=document.createElement('style');
@@ -2620,20 +2718,14 @@ function openBudgetModal(y,m){
       budgets[monthKey(y,m)]={amount:v,daysConsidered:days,startDay:selStart.d,startMonth:selStart.m,startYear:selStart.y,endDay:selEnd.d,endMonth:selEnd.m,endYear:selEnd.y};
       saveData();closeModal();render();showToast('Overall budget saved ✓');
     } else {
-      // Save category-wise budgets — read all inputs including hidden ones
-      if(!window.sbData) window.sbData={};
-      if(!sbData.catBudgets) sbData.catBudgets={};
-      // Force panel visible briefly to ensure inputs are in DOM
-      const panel=document.getElementById('panelCategory');
-      const wasHidden=panel&&panel.style.display==='none';
-      if(wasHidden) panel.style.display='block';
-      document.querySelectorAll('.cat-budget-inp').forEach(el=>{
-        const cat=el.dataset.cat;
-        const val=parseFloat(el.value)||0;
-        if(val>0) sbData.catBudgets[cat]=val;
-        else delete sbData.catBudgets[cat];
+      // Save category-wise budgets
+      // catBudgetDraft was pre-populated from sbData.catBudgets at modal open
+      // and updated via input listeners — use it directly, no DOM reading needed
+      sbData.catBudgets = Object.assign({}, catBudgetDraft);
+      // Remove zero/empty entries
+      Object.keys(sbData.catBudgets).forEach(k=>{
+        if(!(sbData.catBudgets[k]>0)) delete sbData.catBudgets[k];
       });
-      if(wasHidden) panel.style.display='none';
       // Store date range for category budgets
       if(catSelStart&&catSelEnd){
         const ms1=dMs(catSelStart.y,catSelStart.m,catSelStart.d);
@@ -3021,6 +3113,46 @@ function bindEvents(){
   }
   g('themeToggleBtn')&&g('themeToggleBtn').addEventListener('click', toggleTheme);
 
+  // Bell notification button
+  g('notifBtn')&&g('notifBtn').addEventListener('click',e=>{
+    e.stopPropagation();
+    const existing=document.getElementById('notifDropdown');
+    if(existing){existing.remove();return;}
+    const wrap=g('notifBtn').parentElement;
+    const unread=getAlerts();       // unread only
+    const all=getAlerts(true);      // all including read
+    const readSet=new Set(sbData.readAlerts||[]);
+    const dropdown=document.createElement('div');
+    dropdown.className='notif-dropdown';dropdown.id='notifDropdown';
+    const items=all.length?all.map(a=>{
+      const isRead=readSet.has(a.id);
+      return `<div class="notif-item" style="${isRead?'opacity:.5':''}">
+        <span class="notif-icon">${a.type==='over'?'🚨':'⚠️'}</span>
+        <div>
+          <div class="notif-text"><strong>${a.label}</strong> — ${a.type==='over'?`Over budget! ${fmt(a.spent)} of ${fmt(a.limit)}`:
+            `${a.pct}% used (${fmt(a.spent)} / ${fmt(a.limit)})`}</div>
+          <div class="notif-sub">${isRead?'Read · ':''} ${a.type==='over'?'Exceeded limit':'Approaching limit'}</div>
+        </div>
+      </div>`;
+    }).join(''):`<div class="notif-empty">All categories within budget ✓</div>`;
+    dropdown.innerHTML=`
+      <div class="notif-header">
+        <span>Budget Alerts</span>
+        <span style="color:${unread.length?'var(--red)':'var(--muted)'}">${unread.length} unread</span>
+      </div>
+      ${items}
+      <div style="padding:8px 14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px">
+        ${unread.length?`<button onclick="markAllAlertsRead();document.getElementById('notifDropdown')?.remove()" style="background:var(--primary);color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit">Mark all as read</button>`:'<span style="font-size:11px;color:var(--muted)">All caught up</span>'}
+        <button onclick="sbOpen();sbToggleSection('sbBudgetSection');document.getElementById('notifDropdown')?.remove()" style="background:none;border:none;font-size:11px;color:var(--primary);cursor:pointer;font-family:inherit;font-weight:600">Finance Tools →</button>
+      </div>`;
+    wrap.appendChild(dropdown);
+    setTimeout(()=>{
+      document.addEventListener('click',function h(ev){
+        if(!dropdown.contains(ev.target)){dropdown.remove();document.removeEventListener('click',h);}
+      });
+    },0);
+  });
+
   g('prevMonthBtn')&&g('prevMonthBtn').addEventListener('click',()=>navigateWithCheck(()=>{viewMonth--;if(viewMonth<0){viewMonth=11;viewYear--;}resetNav();render();}));
   g('nextMonthBtn')&&g('nextMonthBtn').addEventListener('click',()=>navigateWithCheck(()=>{viewMonth++;if(viewMonth>11){viewMonth=0;viewYear++;}resetNav();render();}));
   g('prevYearBtn')&&g('prevYearBtn').addEventListener('click',()=>navigateWithCheck(()=>{viewYear--;resetNav();render();}));
@@ -3139,7 +3271,7 @@ function bindEvents(){
         const app = getApps().length ? getApps()[0] : initializeApp(_fbConfig);
         await signOut(getAuth(app));
       }catch(e){}
-      window.location.href='/auth';
+      window.location.href=authPath();
     });
     setTimeout(()=>{
       document.addEventListener('click',function handler(ev){
@@ -3262,6 +3394,9 @@ function bindEvents(){
     });
     saveData();
     formRows=[{cat:Object.keys(customCats)[0]||'lunch',amount:'',notes:'',rec:false,payMethod:'upi'}];
+    // Clear read alerts so new overspends show as unread
+    sbData.readAlerts=[];
+    saveSbData();
     render();showToast(`${valid.length} item${valid.length!==1?'s':''} saved ✓`);
     renderPaySplit();
   });
@@ -3500,7 +3635,7 @@ function showToast(msg){
 /* ── BOOT ────────────────────────────────────────── */
 (function authGuard(){
   const user=JSON.parse(localStorage.getItem('exp_user')||'null');
-  if(!user||!user.loggedIn) window.location.href='/auth';
+  if(!user||!user.loggedIn) window.location.href=authPath();
 })();
 loadData();   // load from localStorage instantly
 initTheme();
@@ -3552,8 +3687,8 @@ if(window.innerWidth>=900){ sbOpen(); document.getElementById('sbToggle').queryS
 function sbToggleSection(id){
   const s=document.getElementById(id);
   s.classList.toggle('open');
-  // Re-render pay split when that section opens (canvas needs to be visible)
   if(id==='sbPaySection'&&s.classList.contains('open')) renderPaySplit();
+  if(id==='sbBudgetSection'&&s.classList.contains('open')) renderCatBudgets();
 }
 
 // ── FESTIVAL MODE ──
@@ -3777,25 +3912,50 @@ if(!sbData.savingsGoals) sbData.savingsGoals=[];
 // Init alert settings UI
 document.getElementById('alertsEnabled').checked=sbData.alertSettings.enabled;
 document.getElementById('alertThreshold').value=sbData.alertSettings.threshold;
-function saveBudgetAlertSettings(){ sbData.alertSettings.enabled=document.getElementById('alertsEnabled').checked; sbData.alertSettings.threshold=parseInt(document.getElementById('alertThreshold').value); saveSbData(); renderCatBudgets(); }
+function saveBudgetAlertSettings(){
+  sbData.alertSettings={
+    enabled: document.getElementById('alertsEnabled').checked === true,
+    threshold: parseInt(document.getElementById('alertThreshold').value)||80
+  };
+  saveSbData();
+  renderCatBudgets();
+  // Re-render nav in real-time so bell icon appears/disappears immediately
+  document.getElementById('navArea').innerHTML = buildNav();
+  bindEvents();
+}
 
 function renderCatBudgets(){
   const cats=Object.entries(customCats);
   const spent=monthCatTotals(viewYear,viewMonth);
-  const threshold=sbData.alertSettings.threshold;
-  const enabled=sbData.alertSettings.enabled;
+  const threshold=sbData.alertSettings?.threshold||80;
+  const enabled=sbData.alertSettings?.enabled===true; // strict: only true if explicitly true
+
+  // Always sync toggle UI to saved state
+  const toggleEl=document.getElementById('alertsEnabled');
+  const thresholdEl=document.getElementById('alertThreshold');
+  if(toggleEl) toggleEl.checked=enabled;
+  if(thresholdEl) thresholdEl.value=threshold;
   let alertsHtml='';
 
-  const html=cats.map(([k,c])=>{
-    const limit=sbData.catBudgets[k]||0;
+  // Only show categories that have a budget set
+  const budgetedCats=cats.filter(([k])=>sbData.catBudgets[k]>0);
+
+  if(!budgetedCats.length){
+    document.getElementById('catBudgetList').innerHTML=`<div class="sb-info">No category budgets set yet.<br>Click <strong>Set budget</strong> → <em>Category-wise</em> to add limits.</div>`;
+    document.getElementById('alertsList').innerHTML=`<div style="font-size:11px;color:var(--muted);text-align:center;padding:4px 0">${enabled?'No alerts — no category budgets set':'Alerts disabled'}</div>`;
+    return;
+  }
+
+  const html=budgetedCats.map(([k,c])=>{
+    const limit=sbData.catBudgets[k];
     const s=spent[k]||0;
-    const pct=limit>0?Math.min(100,(s/limit)*100):0;
-    const over=limit>0&&s>=limit;
-    const nearLimit=limit>0&&pct>=threshold&&!over;
-    // Build alert
-    if(enabled&&limit>0&&pct>=threshold){
-      const msg=over?`Over budget on <strong>${c.label}</strong>! Spent ₹${Math.round(s).toLocaleString('en-IN')} of ₹${Math.round(limit).toLocaleString('en-IN')}`:
-        `<strong>${c.label}</strong>: ${Math.round(pct)}% of budget used (₹${Math.round(s).toLocaleString('en-IN')} / ₹${Math.round(limit).toLocaleString('en-IN')})`;
+    const pct=Math.min(100,(s/limit)*100);
+    const over=s>=limit;
+    const nearLimit=pct>=threshold&&!over;
+    if(enabled&&pct>=threshold){
+      const msg=over
+        ?`Over budget on <strong>${c.label}</strong>! Spent ₹${Math.round(s).toLocaleString('en-IN')} of ₹${Math.round(limit).toLocaleString('en-IN')}`
+        :`<strong>${c.label}</strong>: ${Math.round(pct)}% used (₹${Math.round(s).toLocaleString('en-IN')} / ₹${Math.round(limit).toLocaleString('en-IN')})`;
       alertsHtml+=`<div style="background:${over?'var(--red-bg)':'var(--orange-bg)'};border:1px solid ${over?'var(--red-bd)':'var(--orange-bd)'};border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:12px;color:${over?'var(--red)':'var(--orange)'}">
         ${over?'🚨':'⚠️'} ${msg}
       </div>`;
@@ -3806,15 +3966,13 @@ function renderCatBudgets(){
           <span style="width:10px;height:10px;border-radius:50%;background:${c.color};display:inline-block;flex-shrink:0"></span>
           <span style="font-size:12px;font-weight:600;color:var(--text)">${c.label}</span>
         </div>
-        <div style="display:flex;align-items:center;gap:4px">
-          <span style="font-size:11px;color:var(--muted)">₹</span>
-          <input type="number" value="${limit||''}" placeholder="No limit" min="0"
-            onchange="sbData.catBudgets['${k}']=parseFloat(this.value)||0;saveSbData();renderCatBudgets()"
-            style="width:72px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:3px 6px;font-size:12px;color:var(--text);text-align:right">
-        </div>
+        <span style="font-size:12px;font-weight:700;color:${over?'var(--red)':nearLimit?'var(--orange)':'var(--primary)'}">₹${Math.round(s).toLocaleString('en-IN')} / ₹${Math.round(limit).toLocaleString('en-IN')}</span>
       </div>
-      ${limit>0?`<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:2px"><span>₹${Math.round(s).toLocaleString('en-IN')} spent</span><span style="color:${over?'var(--red)':nearLimit?'var(--orange)':'var(--muted)'}">₹${Math.round(Math.max(0,limit-s)).toLocaleString('en-IN')} left</span></div>
-      <div class="sb-prog-bg"><div class="sb-prog-fill" style="width:${pct}%;background:${over?'var(--red)':nearLimit?'var(--orange)':'var(--primary)'}"></div></div>`:''}
+      <div class="sb-prog-bg"><div class="sb-prog-fill" style="width:${pct}%;background:${over?'var(--red)':nearLimit?'var(--orange)':'var(--primary)'}"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:2px">
+        <span>${Math.round(pct)}% used</span>
+        <span style="color:${over?'var(--red)':'var(--muted)'}">₹${Math.round(Math.max(0,limit-s)).toLocaleString('en-IN')} left</span>
+      </div>
     </div>`;
   }).join('');
 
@@ -3863,9 +4021,7 @@ function renderSavingsGoals(){
 }
 renderSavingsGoals();
 
-// Re-render cat budgets when main data changes (hook into saveData)
-const _origSaveData=saveData;
-saveData=function(){ _origSaveData(); if(document.getElementById('catBudgetList')) renderCatBudgets(); };
+// renderCatBudgets is now called inside render() directly
 
 </script>
 </body>
