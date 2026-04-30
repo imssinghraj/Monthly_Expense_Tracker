@@ -427,7 +427,7 @@ document.getElementById('themeToggle').addEventListener('click', () => {
 onAuthStateChanged(auth, user => {
   if (user && !sessionStorage.getItem('exp_signed_out')) {
     localStorage.setItem('exp_user', JSON.stringify({ email: user.email, name: user.displayName || user.email.split('@')[0], loggedIn: true, uid: user.uid }));
-    window.location.href = '/';
+    window.location.href = location.hostname==='127.0.0.1'||location.hostname==='localhost' ? 'index.html' : '/';
   }
   sessionStorage.removeItem('exp_signed_out');
 });
