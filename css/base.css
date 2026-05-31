@@ -1,0 +1,37 @@
+/**
+ * Base Styles
+ * Global resets and foundational styles
+ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 15px;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  min-height: 100vh;
+  padding-bottom: 60px;
+  transition: background 0.25s, color 0.25s;
+}
+
+/* Dark mode background gradient */
+html.dark body {
+  background: radial-gradient(ellipse at top, rgba(91, 155, 255, 0.06) 0%, transparent 50%), var(--bg);
+}
+
+/* Focus visible styles for accessibility */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.2);
+}

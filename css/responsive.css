@@ -1,0 +1,64 @@
+/**
+ * Responsive Styles
+ * Media queries and responsive adjustments
+ */
+
+/* ── Mobile Small (≤360px) ── */
+@media (max-width: 360px) {
+  html {
+    font-size: 13px;
+  }
+}
+
+/* ── Mobile (≤480px) ── */
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+  
+  body {
+    padding-bottom: 40px;
+  }
+}
+
+/* ── Tablet Portrait (481px - 699px) ── */
+@media (min-width: 481px) and (max-width: 699px) {
+  /* Adjustments handled in component files */
+}
+
+/* ── Tablet Landscape (700px - 899px) ── */
+@media (min-width: 700px) and (max-width: 899px) {
+  /* Adjustments handled in component files */
+}
+
+/* ── Desktop Small (900px - 1199px) ── */
+@media (min-width: 900px) and (max-width: 1199px) {
+  /* Adjustments handled in component files */
+}
+
+/* ── Desktop Large (≥1200px) ── */
+@media (min-width: 1200px) {
+  /* Adjustments handled in component files */
+}
+
+/* ── Print Styles ── */
+@media print {
+  .nav,
+  .tabs,
+  .sidebar,
+  .sb-toggle,
+  .sb-overlay,
+  #toast {
+    display: none !important;
+  }
+  
+  .page {
+    max-width: 100%;
+    padding: 0;
+  }
+  
+  .stat,
+  .form-card {
+    break-inside: avoid;
+  }
+}

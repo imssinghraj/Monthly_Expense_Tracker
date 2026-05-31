@@ -1,0 +1,280 @@
+/**
+ * Card Component Styles
+ * Reusable card components for stats, forms, and content
+ */
+
+/* ── Stats Cards ── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.stat-wide {
+  grid-column: 1 / -1;
+}
+
+.stat {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.15s;
+  display: flex;
+  flex-direction: column;
+  min-height: 100px;
+}
+
+.stat:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.stat-lbl {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stat-val {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  min-height: 26px;
+  display: flex;
+  align-items: center;
+}
+
+.stat-sub {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 3px;
+  line-height: 1.4;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  flex: 1;
+}
+
+/* Stat color variants */
+.stat.green {
+  background: var(--green-bg);
+  border-color: var(--green-bd);
+}
+
+.stat.green .stat-val {
+  color: var(--green);
+}
+
+.stat.red {
+  background: var(--red-bg);
+  border-color: var(--red-bd);
+}
+
+.stat.red .stat-val {
+  color: var(--red);
+}
+
+.stat.orange {
+  background: var(--orange-bg);
+  border-color: var(--orange-bd);
+}
+
+.stat.orange .stat-val {
+  color: var(--orange);
+}
+
+.stat.blue {
+  background: var(--blue-bg);
+  border-color: var(--blue-bd);
+}
+
+.stat.blue .stat-val {
+  color: var(--blue);
+}
+
+.stat.purple {
+  background: var(--purple-bg);
+  border-color: var(--purple-bd);
+}
+
+.stat.purple .stat-val {
+  color: var(--purple);
+}
+
+/* Progress bars in stats */
+.prog-bg {
+  height: 6px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-top: 10px;
+  flex-shrink: 0;
+}
+
+.prog-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.prog-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+
+/* Month-over-month badges */
+.mom-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 99px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  max-width: none;
+}
+
+.mom-up {
+  background: var(--red-bg);
+  color: var(--red);
+}
+
+.mom-dn {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.mom-flat {
+  background: var(--surface-2);
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+
+/* ── Form Cards ── */
+.form-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow);
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-card.stretch {
+  flex: 1;
+}
+
+/* ── Section Titles ── */
+.section-title {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+/* ── Dark Mode Adjustments ── */
+html.dark .stat,
+html.dark .form-card {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.025) 0%, rgba(255, 255, 255, 0) 100%), var(--surface);
+  border-color: rgba(38, 48, 64, 0.9);
+  box-shadow: var(--shadow);
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .stats {
+    gap: 8px;
+  }
+  
+  .stat-val {
+    font-size: 22px;
+  }
+  
+  .stat-wide .stat-val {
+    font-size: 24px;
+  }
+  
+  .form-card {
+    padding: 14px;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 699px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 700px) and (max-width: 899px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 900px) {
+  .stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .stats {
+    gap: 14px;
+  }
+}
+
+/* ── Compact Stats Grid ── */
+.compact-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.compact-stats .stat {
+  min-width: 0;
+}
+
+.compact-stats .stat-lbl {
+  line-height: 1.35;
+}
+
+.compact-stats .stat-val {
+  font-size: 18px;
+}
+
+@media (max-width: 480px) {
+  .compact-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .compact-stats .stat-val {
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 900px) {
+  .compact-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

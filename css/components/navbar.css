@@ -1,0 +1,213 @@
+/**
+ * Navbar Component Styles
+ * Top navigation bar with logo, navigation controls, and user menu
+ */
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: background 0.25s, border-color 0.25s;
+  min-height: 60px;
+  box-shadow: 0 1px 0 var(--border);
+}
+
+html.dark .nav {
+  background: rgba(13, 19, 26, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom-color: rgba(38, 48, 64, 0.8);
+  box-shadow: 0 1px 0 rgba(38, 48, 64, 0.6);
+}
+
+/* ── Logo ── */
+.nav-logo-wrap {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+  flex-shrink: 0;
+  margin-right: 16px;
+}
+
+.nav-logo-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 10px rgba(26, 86, 219, 0.35);
+}
+
+.nav-logo-icon svg {
+  display: block;
+}
+
+.nav-logo-name {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.nav-logo-name span {
+  color: var(--primary);
+}
+
+/* ── Navigation Sides ── */
+.nav-side {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  z-index: 1;
+}
+
+.nav-side.left {
+  justify-content: flex-start;
+}
+
+.nav-side.right {
+  justify-content: flex-end;
+}
+
+/* ── Center Title ── */
+.nav-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.nav-center .today-btn {
+  pointer-events: auto;
+}
+
+.nav-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 280px;
+}
+
+.nav-sub {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 1px;
+  text-align: center;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+/* ── Navigation Arrows ── */
+.nav-arrows {
+  display: flex;
+  gap: 3px;
+}
+
+.nav-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 14px;
+  transition: all 0.15s;
+}
+
+.nav-btn:hover {
+  background: var(--surface-2);
+  color: var(--text);
+  border-color: var(--text);
+}
+
+/* ── Today Button ── */
+.today-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--muted);
+  font-family: inherit;
+  transition: all 0.15s;
+  letter-spacing: 0.01em;
+}
+
+.today-btn:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+  background: var(--blue-bg);
+}
+
+/* ── Theme Toggle ── */
+.theme-toggle {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+  background: var(--surface-2);
+  border-color: var(--text);
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .nav {
+    padding: 0 10px;
+    min-height: 52px;
+  }
+  
+  .nav-title {
+    font-size: 12px;
+  }
+  
+  .nav-sub {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  .nav-title {
+    font-size: 11px;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 699px) {
+  .nav-title {
+    font-size: 13px;
+  }
+}

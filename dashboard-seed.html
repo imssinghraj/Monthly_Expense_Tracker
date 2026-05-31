@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<script>
+localStorage.setItem("exp_user", JSON.stringify({
+  email: "design-check@example.com",
+  name: "Design Check",
+  loggedIn: true,
+  uid: "design-check"
+}));
+localStorage.setItem("exp_theme", "light");
+localStorage.setItem("exp_tracker_v3", JSON.stringify({
+  entries: {
+    "2026-04-15": [{ id: "prev", cat: "lunch", amount: 482 }],
+    "2026-05-05": [{ id: "a", cat: "travel", amount: 850 }],
+    "2026-05-12": [{ id: "b", cat: "shopping", amount: 2100 }],
+    "2026-05-15": [{ id: "c", cat: "lunch", amount: 1600 }],
+    "2026-05-22": [{ id: "d", cat: "snacks", amount: 450 }],
+    "2026-05-30": [{ id: "e", cat: "other", amount: 2500 }]
+  },
+  budgets: {
+    "2026-05": {
+      amount: 12497,
+      daysConsidered: 31,
+      startDay: 1,
+      startMonth: 4,
+      startYear: 2026,
+      endDay: 31,
+      endMonth: 4,
+      endYear: 2026
+    }
+  },
+  recurring: [
+    { id: "r1", cat: "lunch", amount: 350, notes: "Office lunch" }
+  ],
+  noExpenseDays: {}
+}));
+location.replace("/");
+</script>

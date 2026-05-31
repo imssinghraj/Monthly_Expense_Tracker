@@ -1,0 +1,254 @@
+/**
+ * Form Component Styles
+ * Input fields, selects, and form layouts
+ */
+
+/* ── Form Fields ── */
+.field label {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--muted);
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.field select,
+.field input[type="number"],
+.field input[type="text"],
+.field input[type="date"] {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text);
+  background-color: var(--surface);
+  outline: none;
+  transition: all 0.2s ease;
+  appearance: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.field select {
+  background-image: url("data:image/svg+xml,%3Csvg width='14' height='9' viewBox='0 0 14 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L7 7.5L13 1.5' stroke='%238A8680' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 40px;
+  cursor: pointer;
+}
+
+.field select:hover,
+.field input:hover {
+  border-color: var(--blue);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.field select:focus,
+.field input:focus {
+  border-color: var(--blue);
+  background-color: var(--surface);
+  box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.field input::placeholder {
+  color: var(--muted);
+}
+
+/* ── Entry Row Grid ── */
+.entry-row {
+  display: grid;
+  grid-template-columns: 1fr 130px 32px;
+  gap: 8px;
+  align-items: end;
+}
+
+/* ── Date Row ── */
+.date-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.date-disp {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.date-row input[type="date"] {
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text);
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.date-row input[type="date"]:focus {
+  border-color: var(--blue);
+}
+
+/* ── Payment Method Row ── */
+.pay-method-row {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.pay-method-btn {
+  padding: 3px 9px;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.12s;
+  font-family: inherit;
+}
+
+.pay-method-btn.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+.pay-method-btn:hover:not(.active) {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* ── Notes Row ── */
+.notes-row {
+  margin-top: 6px;
+}
+
+.notes-row input[type="text"] {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 7px 10px;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--surface-2);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.notes-row input:focus {
+  border-color: var(--blue);
+  background: var(--surface);
+}
+
+.notes-row input::placeholder {
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* ── Quick Row ── */
+.quick-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.qa-sep {
+  flex: 1;
+}
+
+/* ── Recurring Label ── */
+.rec-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.rec-label input {
+  accent-color: var(--blue);
+}
+
+/* ── Form Footer ── */
+.form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.live-total {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.live-total strong {
+  color: var(--text);
+  font-weight: 700;
+}
+
+/* ── Dark Mode Adjustments ── */
+html.dark .field input[type="number"],
+html.dark .field input[type="text"],
+html.dark .field input[type="date"],
+html.dark .notes-row input[type="text"],
+html.dark .date-row input[type="date"] {
+  background: var(--surface-2);
+  border-color: rgba(38, 48, 64, 0.9);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+html.dark .field select {
+  background-color: #1A2130 !important;
+  background-image: url("data:image/svg+xml,%3Csvg width='14' height='9' viewBox='0 0 14 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L7 7.5L13 1.5' stroke='%237A8FA6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  border-color: rgba(38, 48, 64, 0.9);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+html.dark .field select:hover {
+  border-color: rgba(91, 155, 255, 0.45);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  background-color: #212C3D !important;
+}
+
+html.dark .field select:focus,
+html.dark .field input:focus,
+html.dark .notes-row input:focus,
+html.dark .date-row input[type="date"]:focus {
+  background-color: #212C3D !important;
+  border-color: rgba(91, 155, 255, 0.55);
+  box-shadow: 0 0 0 3px rgba(91, 155, 255, 0.15), 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .entry-row {
+    grid-template-columns: 1fr 90px 32px;
+  }
+}
+
+@media (max-width: 360px) {
+  .entry-row {
+    grid-template-columns: 1fr 80px 28px;
+  }
+}

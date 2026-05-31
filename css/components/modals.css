@@ -1,0 +1,173 @@
+/**
+ * Modal Component Styles
+ * Overlay modals and dialogs
+ */
+
+/* ── Modal Overlay ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeOverlay 0.15s ease;
+  backdrop-filter: blur(4px);
+}
+
+@keyframes fadeOverlay {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ── Modal Container ── */
+.modal {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 26px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2), 0 4px 16px rgba(0, 0, 0, 0.1);
+  animation: slideUp 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 1px solid var(--border);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+
+.modal p {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 16px;
+  line-height: 1.55;
+}
+
+/* ── Modal Inputs ── */
+.modal-input-wrap {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.modal-input-wrap span {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.modal input[type="number"],
+.modal input[type="text"] {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--text);
+  background: var(--surface-2);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.modal input[type="number"]:focus,
+.modal input[type="text"]:focus {
+  border-color: var(--blue);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1);
+}
+
+.modal .modal-input-wrap input {
+  padding-left: 28px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.modal-hint {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 16px;
+  margin-top: -10px;
+}
+
+/* ── Modal Footer ── */
+.modal-footer {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* ── Toast Notification ── */
+#toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(60px);
+  background: var(--text);
+  color: var(--surface);
+  padding: 8px 22px;
+  border-radius: 99px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: transform 0.25s;
+  z-index: 999;
+  pointer-events: none;
+}
+
+#toast.show {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ── Dark Mode Adjustments ── */
+html.dark .modal-overlay {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+html.dark .modal {
+  background: var(--surface-2);
+  border: 1px solid rgba(38, 48, 64, 0.8);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+
+html.dark .modal input[type="number"],
+html.dark .modal input[type="text"] {
+  background: var(--surface-2);
+  border-color: rgba(38, 48, 64, 0.9);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+html.dark .modal input:focus {
+  background-color: #212C3D !important;
+  border-color: rgba(91, 155, 255, 0.55);
+  box-shadow: 0 0 0 3px rgba(91, 155, 255, 0.15), 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .modal {
+    padding: 18px;
+  }
+}

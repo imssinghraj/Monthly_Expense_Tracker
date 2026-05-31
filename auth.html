@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Sign in to Budgetra to sync and manage your monthly expenses securely.">
+<meta name="theme-color" content="#2563EB">
+<title>Budgetra — Expense Tracker</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%231A56DB'/%3E%3Cstop offset='100%25' stop-color='%235B4FCF'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M5 23L10 17L15 20L27 10M27 10V16M27 10H21' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='10' cy='17' r='2' fill='white'/%3E%3Ccircle cx='15' cy='20' r='2' fill='white'/%3E%3Ccircle cx='27' cy='10' r='2' fill='white'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="src/styles/auth.css">
+<link rel="stylesheet" href="src/styles/design-system.css">
+<link rel="stylesheet" href="src/styles/saas.css">
+<link rel="stylesheet" href="src/styles/professional-dashboard.css">
+<link rel="stylesheet" href="src/styles/enterprise-ui.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand">
+    <div class="nav-logo">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 18L8 14L12 16L20 8M20 8V13M20 8H15" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="8" cy="14" r="1.5" fill="white"/>
+        <circle cx="12" cy="16" r="1.5" fill="white"/>
+        <circle cx="20" cy="8" r="1.5" fill="white"/>
+      </svg>
+    </div>
+    <span class="nav-title">Budget<span style="color:var(--primary)">ra</span></span>
+  </div>
+  <button class="theme-toggle" id="themeToggle" type="button" title="Toggle theme" aria-label="Toggle theme">🌙</button>
+</nav>
+
+<div class="auth-wrap">
+  <div class="auth-card">
+
+    <!-- TABS -->
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tabLogin" type="button" onclick="switchTab('login')">Sign In</button>
+      <button class="auth-tab" id="tabRegister" type="button" onclick="switchTab('register')">Create Account</button>
+    </div>
+
+    <!-- SUCCESS STATE -->
+    <div class="auth-success" id="successState">
+      <div class="success-icon">✓</div>
+      <h3 id="successTitle">Welcome back!</h3>
+      <p id="successMsg">Signing you in…</p>
+    </div>
+
+    <!-- FORM BODY -->
+    <div id="formBody">
+      <div class="auth-body">
+        <h2 class="auth-heading" id="formHeading">Welcome back</h2>
+        <p class="auth-sub" id="formSub">Sign in to your account to continue tracking expenses.</p>
+
+        <!-- SOCIAL -->
+        <div class="social-btns">
+          <button class="social-btn" id="googleBtn" onclick="socialAuth('google')">
+            <svg class="social-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            Continue with Google
+          </button>
+          <button class="social-btn" id="githubBtn" onclick="socialAuth('github')">
+            <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+            Continue with GitHub
+          </button>
+        </div>
+
+        <div class="auth-divider">or continue with email</div>
+
+        <form id="authForm" novalidate>
+
+          <!-- Register-only fields -->
+          <div id="nameFields" style="display:none">
+            <div class="field-row">
+              <div class="field">
+                <label>First name</label>
+                <div class="input-wrap">
+                  <span class="input-icon">👤</span>
+                  <input type="text" id="firstName" placeholder="John" autocomplete="given-name">
+                </div>
+                <div class="field-error" id="firstNameErr">Enter your first name</div>
+              </div>
+              <div class="field">
+                <label>Last name</label>
+                <div class="input-wrap">
+                  <span class="input-icon">👤</span>
+                  <input type="text" id="lastName" placeholder="Doe" autocomplete="family-name">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Email address</label>
+            <div class="input-wrap">
+              <span class="input-icon">✉️</span>
+              <input type="email" id="email" placeholder="you@example.com" autocomplete="email">
+            </div>
+            <div class="field-error" id="emailErr">Enter a valid email address</div>
+          </div>
+
+          <div class="field">
+            <label>Password</label>
+            <div class="input-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+              <button type="button" class="password-toggle" id="pwToggle" onclick="togglePw('password','pwToggle')">👁</button>
+            </div>
+            <div class="field-error" id="passwordErr">Password must be at least 8 characters</div>
+            <div class="strength-wrap" id="strengthWrap">
+              <div class="strength-bars">
+                <div class="strength-bar" id="sb1"></div>
+                <div class="strength-bar" id="sb2"></div>
+                <div class="strength-bar" id="sb3"></div>
+                <div class="strength-bar" id="sb4"></div>
+              </div>
+              <span class="strength-label" id="strengthLabel">Weak</span>
+            </div>
+          </div>
+
+          <!-- Register-only confirm password -->
+          <div class="field" id="confirmField" style="display:none">
+            <label>Confirm password</label>
+            <div class="input-wrap">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="confirmPassword" placeholder="••••••••" autocomplete="new-password">
+              <button type="button" class="password-toggle" id="cpwToggle" onclick="togglePw('confirmPassword','cpwToggle')">👁</button>
+            </div>
+            <div class="field-error" id="confirmErr">Passwords do not match</div>
+          </div>
+
+          <a href="#" class="forgot-link" id="forgotLink" onclick="forgotPassword(event)">Forgot password?</a>
+
+          <button type="submit" class="btn-submit" id="submitBtn">
+            <div class="spinner"></div>
+            <span class="btn-text" id="submitText">Sign In</span>
+          </button>
+
+          <p class="terms-text" id="termsText" style="display:none">
+            By creating an account you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+          </p>
+        </form>
+      </div>
+
+      <div class="auth-footer">
+        <span id="footerText">Don't have an account? <a href="#" onclick="switchTab('register');return false">Create one free</a></span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- Firebase SDK — handles cross-device auth -->
+<script type="module" src="src/scripts/auth.js"></script>
+</body>
+</html>

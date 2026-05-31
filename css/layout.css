@@ -1,0 +1,136 @@
+/**
+ * Layout Styles
+ * Page structure, containers, and grid systems
+ */
+
+/* ── App Wrapper ── */
+.app-wrap {
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (min-width: 900px) {
+  .app-wrap.sb-open {
+    margin-left: var(--sb-width);
+  }
+}
+
+/* ── Page Container ── */
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 20px 0;
+}
+
+/* ── Dashboard Grid ── */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.dashboard-primary,
+.dashboard-secondary {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+  align-self: start;
+}
+
+.dashboard-primary > *,
+.dashboard-secondary > * {
+  width: 100%;
+}
+
+.dashboard-secondary .cat-chart,
+.dashboard-secondary .recurring-section {
+  margin-bottom: 0;
+  flex: none;
+}
+
+/* ── Sticky Desktop Sidebar ── */
+.sticky-desktop {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+/* ── Responsive Breakpoints ── */
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+  
+  .page {
+    padding: 12px 12px 0;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 699px) {
+  .page {
+    padding: 16px 14px 0;
+  }
+}
+
+@media (min-width: 700px) and (max-width: 899px) {
+  .page {
+    padding: 16px 16px 0;
+  }
+}
+
+@media (min-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: 2.2fr 1fr;
+    align-items: start;
+  }
+  
+  .dashboard-primary,
+  .dashboard-secondary {
+    height: auto;
+    align-self: start;
+  }
+  
+  .dashboard-secondary > *:last-child {
+    flex: none;
+  }
+  
+  .sticky-desktop {
+    position: sticky;
+    top: 70px;
+    align-self: start;
+  }
+  
+  /* Adjust stats when sidebar is open */
+  .app-wrap.sb-open .stat-val {
+    font-size: 22px;
+  }
+  
+  .app-wrap.sb-open .stats {
+    gap: 8px;
+  }
+  
+  .app-wrap.sb-open .stat {
+    padding: 12px 13px;
+  }
+  
+  .app-wrap.sb-open .stat-lbl {
+    font-size: 9.5px;
+  }
+  
+  .app-wrap.sb-open .stat-sub {
+    font-size: 10px;
+  }
+  
+  .app-wrap.sb-open .mom-badge {
+    font-size: 9px;
+    padding: 2px 5px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .page {
+    padding: 24px 24px 0;
+  }
+}

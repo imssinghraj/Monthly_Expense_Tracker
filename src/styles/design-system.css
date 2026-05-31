@@ -1,0 +1,143 @@
+/* Budgetra design system: loaded after legacy CSS as a safe modernization layer. */
+:root {
+  color-scheme: light;
+  --font-sans: "Inter", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --bg: #F6F8FC;
+  --surface: #FFFFFF;
+  --surface-2: #F8FAFD;
+  --surface-3: #EEF3FA;
+  --border: #E2E8F2;
+  --border-strong: #CCD6E5;
+  --text: #0B1220;
+  --muted: #64748B;
+  --muted-2: #94A3B8;
+  --ring: rgba(26, 86, 219, .16);
+
+  --primary: #155EEF;
+  --primary-dark: #1146B8;
+  --primary-light: #EAF1FF;
+  --accent: #635BFF;
+  --accent-light: #F0EFFF;
+
+  --green: #087A5A;
+  --green-bg: #E8F7F1;
+  --green-bd: #B7E4D4;
+  --red: #C24132;
+  --red-bg: #FFF0EE;
+  --red-bd: #F4C7C0;
+  --orange: #B85C00;
+  --orange-bg: #FFF4E7;
+  --orange-bd: #F4D1A7;
+  --blue: #155EEF;
+  --blue-bg: #EAF1FF;
+  --blue-bd: #B8CDFB;
+  --purple: #635BFF;
+  --purple-bg: #F0EFFF;
+  --purple-bd: #C8C3FF;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius: 14px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+
+  --shadow: 0 1px 2px rgba(15, 23, 42, .04), 0 8px 24px rgba(15, 23, 42, .06);
+  --shadow-md: 0 1px 3px rgba(15, 23, 42, .06), 0 18px 44px rgba(15, 23, 42, .10);
+  --shadow-lg: 0 24px 70px rgba(15, 23, 42, .14);
+  --ease: cubic-bezier(.2, .8, .2, 1);
+}
+
+html.dark {
+  color-scheme: dark;
+  --bg: #070B13;
+  --surface: #0D1421;
+  --surface-2: #121B2B;
+  --surface-3: #1A2638;
+  --border: #223047;
+  --border-strong: #31415B;
+  --text: #EEF4FF;
+  --muted: #9AA9BD;
+  --muted-2: #718198;
+  --ring: rgba(96, 165, 250, .24);
+
+  --primary: #60A5FA;
+  --primary-dark: #3B82F6;
+  --primary-light: #0D213A;
+  --accent: #8B7CFF;
+  --accent-light: #171334;
+
+  --green: #34D399;
+  --green-bg: #08251A;
+  --green-bd: #14533B;
+  --red: #FB7A6B;
+  --red-bg: #2A0D0A;
+  --red-bd: #633029;
+  --orange: #F5A94B;
+  --orange-bg: #271603;
+  --orange-bd: #5F3A12;
+  --blue: #60A5FA;
+  --blue-bg: #0B1E36;
+  --blue-bd: #254D7D;
+  --purple: #A99FFF;
+  --purple-bg: #181338;
+  --purple-bd: #443A83;
+
+  --shadow: 0 1px 2px rgba(0, 0, 0, .25), 0 18px 44px rgba(0, 0, 0, .34);
+  --shadow-md: 0 1px 2px rgba(0, 0, 0, .34), 0 24px 64px rgba(0, 0, 0, .45);
+  --shadow-lg: 0 28px 80px rgba(0, 0, 0, .55);
+}
+
+html {
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: var(--font-sans);
+  background:
+    radial-gradient(circle at 12% -10%, rgba(21, 94, 239, .10), transparent 34rem),
+    radial-gradient(circle at 88% 0%, rgba(99, 91, 255, .08), transparent 32rem),
+    var(--bg);
+}
+
+html.dark body {
+  background:
+    radial-gradient(circle at 12% -10%, rgba(96, 165, 250, .12), transparent 34rem),
+    radial-gradient(circle at 88% 0%, rgba(139, 124, 255, .10), transparent 32rem),
+    var(--bg);
+}
+
+.u-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.u-muted { color: var(--muted); }
+.u-tabular { font-variant-numeric: tabular-nums; }
+.u-grid { display: grid; gap: var(--space-5); }
+.u-stack { display: flex; flex-direction: column; gap: var(--space-4); }
+.u-cluster { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
+}
